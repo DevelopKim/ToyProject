@@ -7,6 +7,8 @@
 - 자바스크립트 모듈 패턴
 - node.js 기초 
 - ajax에 익숙해지기
+- 시간이 된다면 깃 브랜치를 하나 만들어서 react.js 로 바꿔보자!
 
 
-* 시간이 된다면 깃 브랜치를 하나 만들어서 react.js 로 바꿔보자!
+### backlog
+https://docs.google.com/spreadsheets/d/1oRVIbWLK-MwApX_wtYIJQj8PHpeQkYhtRmuSprEt5fE/edit#gid=0
