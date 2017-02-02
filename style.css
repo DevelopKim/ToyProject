@@ -1,0 +1,147 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+
+/* common */
+a {
+    text-decoration: none;
+    color: #333;
+}
+.clearFix:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+
+
+/* layout */
+body {
+    margin: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    padding: 10px 20px;
+    background: #40901b;
+    color: #fff;
+    text-align: center;
+    box-sizing: border-box;
+}
+.header-title {
+    display: inline-block;
+    margin: 0;
+    font-weight: 400;
+    vertical-align: middle;
+    font-size: 1.2rem;
+}
+.header-menu,
+.header-right {
+    position: absolute;
+    top: 10px;
+}
+.header-menu,
+.header-add,
+.header-search {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid pink;
+    box-sizing: border-box;
+    text-indent: -9999px;
+}
+.header-menu {
+    left: 20px;
+}
+.header-right {
+    right: 20px;
+}
+.header-add {
+
+}
+.header-search {
+
+}
+
+.gnb {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 400px;
+    padding: 70px 20px 20px 20px;
+    background: #f1f1f1;
+    overflow: auto;
+    transform: translate3d(-400px, 0, 0);
+    box-sizing: border-box;
+    transition: all 0.3s;
+}
+.gnb.open {
+    transform: translate3d(0, 0, 0);
+}
+.gnb-user {
+    padding: 10px 0;
+    font-size: 1.2rem;
+}
+.gnb-list > li {
+    margin: 10px 0;
+}
+.gnb-list a {
+    display: block;
+}
+.gnb-categoryList {
+    margin-top: 5px;
+}
+.gnb-categoryList li a {
+    position: relative;
+    padding: 6px;
+    padding-left: 18px;
+}
+.gnb-categoryList li a:before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    margin-top: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #343838;
+}
+.gnb li a:hover {
+    background: #fff;
+}
+
+.contents {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+
+
+/* module */
+.modal {
+    width: 300px;
+    border: 1px solid red;
+    box-sizing: border-box;
+}
+
+
+
+/* media query */
+@media only screen and (max-width: 700px) {
+    .gnb {
+        width: 100%;
+    }
+}
