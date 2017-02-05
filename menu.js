@@ -1,10 +1,8 @@
-
 // 메뉴 토글 스크립트
 // 메뉴가 열렸는지 상태와 메뉴 토글 함수를 반환한다.
-// {
-//  gnbIsOpen: ,
-//  menuToggle:
-// }
+// return 오브젝트
+// todoMenu.gnbIsOpen
+// todoMenu.menuToggle
 
 var todoMenu = (function(){
     var gnb = document.querySelector(".gnb");
