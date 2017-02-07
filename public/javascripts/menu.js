@@ -23,5 +23,5 @@ var todoMenu = (function(){
 
     menuBtn.addEventListener("click", option.menuToggle.bind(option));
 
-    return option;
+    // return option;
 })();
