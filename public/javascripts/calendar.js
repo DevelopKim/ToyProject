@@ -44,31 +44,32 @@ handleClientLoad();
         gapi.load('client:auth2', initClient);
       }
 
-      /**
-       *  Initializes the API client library and sets up sign-in state
-       *  listeners.
-       */
+      // api 초기화하고 sign-in state를 설정한다.
+      // 초기화(initialization)란? data object 또는 variable에 최초의 값(initial value)을 할당하는 것이다.
+      // oop에서는 constructor코드에 들어가는 경우가 많음.
+      // api key 세팅, discovery doc 로딩, auth, initializing auth가 끝난 후 goog.Thenable 오브젝트를 반환한다.
       function initClient() {
-        gapi.client.init({ // client api 초기화
+        gapi.client.init({
             apiKey: API_KEY,
           discoveryDocs: DISCOVERY_DOCS,
           clientId: CLIENT_ID,
           scope: SCOPES
-        }).then(function () {
-          // Listen for sign-in state changes.
-          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+      }).then(function () {
+          var authObj = gapi.auth2.getAuthInstance();
 
-          // Handle the initial sign-in state.
-          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+          // 로그인 정보가 바뀌면 callback 함수 실행.
+          authObj.isSignedIn.listen(updateSigninStatus);
+
+          // 로그인 되있는지 체크
+          updateSigninStatus(authObj.isSignedIn.get());
+
+          // 로그인, 로그아웃 버튼에 이벤트 등록한다.
           authorizeButton.onclick = handleAuthClick;
           signoutButton.onclick = handleSignoutClick;
         });
       }
 
-      /**
-       *  Called when the signed in status changes, to update the UI
-       *  appropriately. After a sign-in, the API is called.
-       */
+      // 로그인 정보가 바뀌면 ui 바꿔준다. (로그인하거나 로그아웃 할때 실행)
       function updateSigninStatus(isSignedIn) {
         if (isSignedIn) {
           authorizeButton.style.display = 'none';
@@ -80,48 +81,55 @@ handleClientLoad();
         }
       }
 
-      /**
-       *  Sign in the user upon button click.
-       */
+      // 로그인 실행
       function handleAuthClick(event) {
         gapi.auth2.getAuthInstance().signIn();
       }
 
-      /**
-       *  Sign out the user upon button click.
-       */
+      // 로그아웃 실행
       function handleSignoutClick(event) {
         gapi.auth2.getAuthInstance().signOut();
       }
 
-      /**
-       * Append a pre element to the body containing the given message
-       * as its text node. Used to display the results of the API call.
-       *
-       * @param {string} message Text to be placed in pre element.
-       */
+      // dom에 이벤트 리스트 추가한다.
+      //@param {string} message Text to be placed in pre element.
       function appendPre(message) {
         var pre = document.getElementById('content');
         var textContent = document.createTextNode(message + '\n');
         pre.appendChild(textContent);
       }
 
-      /**
-       * Print the summary and start datetime/date of the next ten events in
-       * the authorized user's calendar. If no events are found an
-       * appropriate message is printed.
-       */
+
+       // 유저는 하나의 primary calendar를 가지고 있으며, 하나 이상의 다른 캘린더를 가질 수 있다.
+       // 유저(organizer)는 이벤트를 생성하고 다른 유저(attendee)를 초대할 수 있다.
+       // 여러 사람들과 공유되는 이벤트일 경우, 이벤트 입장에서는 공유되는 캘린더(이벤트가 등록된 캘린더)가 organizer이며, 캘린더를 공유하는 유저가 attendees가 된다.
+
+       // event: 캘린더에 등록된 이벤트 (시작일, 종료일, 제목 등을 갖는다.)
+       //   event는 single(한번에 끝남. occurrence), recurring(반복되는 일정. containing multiple occurrences) 두가지가 있다.
+       //   특정 시간(timed)에 발생할 수도 있고 하루 종일(all-day) 발생할 수도 있다.
+       //   하나의 organizer(캘린더)를 가지고, 여러 attendees(초대된 유저의 primary calendar)를 가진다.
+       // calendar: 이벤트의 모음이다. 각각의 캘린더는 metadata를 가지고 있다. Calendars collection는 존재하는 모든 캘린더를 담고 있다.
+       //   기본으록 생성되는 캘린더를 Primary calendar라고 한다 (캘린더의 id는 보통 유저의 이메일 주소이다).
+       // calendar list: 캘린더 ui 상의 모든 캘린더 리스트. 캘린더 하나의 메타데이터는 CalendarListEntry에 있다. ("kind": "calendar#calendarListEntry")
+       // setting: Calendar UI의 세팅
+       // ACL: 다른 사용자가 어떤 허용범위에서 캘런더에 접근할 수 있는지 정해놓은 룰. An access control rule.
+       // color: Calendar UI에서 정해놓은 색.(이벤트 색과 캘린더 색 두가지가 있다.)
+       // free/busy: 스케쥴된 이벤트가 있는 캘린더는 busy, 없는 캘린더는 free
+
+       // Reminders와 Notifications을 제공한다.
+       // remnder: 이벤트 시작 일정 시간 전에 알려준다.
+       // notification: 이벤트가 수정될 때 알려준다.
+
       function listUpcomingEvents() {
-        gapi.client.calendar.events.list({
+        gapi.client.calendar.events.list({ // 캘린더에 등록되있는 이벤트 리스트 오브젝트를 반환한다.
           'calendarId': 'primary',
           'timeMin': (new Date()).toISOString(),
           'showDeleted': false,
           'singleEvents': true,
           'maxResults': 10,
           'orderBy': 'startTime'
-        }).then(function(response) {
+      }).then(function(response) {
           var events = response.result.items;
-          appendPre('Upcoming events:');
 
           if (events.length > 0) {
             for (i = 0; i < events.length; i++) {
@@ -133,7 +141,38 @@ handleClientLoad();
               appendPre(event.summary + ' (' + when + ')');
             }
           } else {
-            appendPre('No upcoming events found.');
+            appendPre("등록된 이벤트가 없습니다.");
           }
-        });
+      });
       }
+
+
+    // add event to the calendar
+    document.getElementById("addEvent").addEventListener("click", function(e){
+        e.preventDefault();
+
+        var event = {
+          'summary': 'Google I/O 2015',
+          'location': '800 Howard St., San Francisco, CA 94103',
+          'description': 'A chance to hear more about Google\'s developer products.',
+          'start': {
+            'dateTime': '2017-02-12T09:00:00-07:00',
+            'timeZone': 'America/Los_Angeles'
+          },
+          'end': {
+            'dateTime': '2017-02-12T17:00:00-07:00',
+            'timeZone': 'America/Los_Angeles'
+          },
+        };
+
+        var request = gapi.client.calendar.events.insert({
+            'calendarId': 'primary',
+            'resource': event
+        });
+
+
+
+        request.execute(function(event, test) {
+          appendPre('Event created: ' + event.htmlLink);
+        });
+    });
