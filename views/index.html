@@ -45,21 +45,20 @@
         </div>
 
 
-        <a href="#" class="button" id="addEvent">Add Event</a>
-
-
-
         <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize-button" style="display: none;">Authorize</button>
-    <button id="signout-button" style="display: none;">Sign Out</button>
+        <button id="authorize-button" class="button" style="display: none;">Sign In</button>
+        <button id="signout-button" class="button" style="display: none;">Sign Out</button>
 
 
         <div class="modal addEventPopup">
-            <input type="datetime-title" class="addEventPopup-title">
-            <input type="datetime-local" class="addEventPopup-date">
-            <input type="datetime-local" class="addEventPopup-date2">
-            <input type="submit" value="확인">
-            <a href="#">취소</a>
+            <input type="datetime-title" class="addEventPopup-title inpuText block">
+            <input type="datetime-local" class="addEventPopup-date inpuText block">
+            <input type="datetime-local" class="addEventPopup-date2 inpuText block">
+
+            <div class="buttonWrapper">
+                <a href="#" class="button" id="addEvent">Add Event</a>
+                <a href="#" class="button white">취소</a>
+            </div>
         </div>
 
     </div>
