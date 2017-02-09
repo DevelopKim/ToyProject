@@ -93,10 +93,11 @@ handleClientLoad();
 
       // dom에 이벤트 리스트 추가한다.
       //@param {string} message Text to be placed in pre element.
-      function appendPre(message) {
-        var pre = document.getElementById('content');
-        var textContent = document.createTextNode(message + '\n');
-        pre.appendChild(textContent);
+      function appendLi(message, date) {
+        var ul = document.querySelector(".contents");
+        var div = document.createElement("div");
+        div.innerHTML = message + "<span class='listUnit-date'>" + date + "</span>";
+        ul.appendChild(div);
       }
 
 
@@ -126,7 +127,7 @@ handleClientLoad();
           'timeMin': (new Date()).toISOString(),
           'showDeleted': false,
           'singleEvents': true,
-          'maxResults': 10,
+          'maxResults': 20,
           'orderBy': 'startTime'
       }).then(function(response) {
           var events = response.result.items;
@@ -138,41 +139,52 @@ handleClientLoad();
               if (!when) {
                 when = event.start.date;
               }
-              appendPre(event.summary + ' (' + when + ')');
+              appendLi(event.summary, when);
             }
           } else {
-            appendPre("등록된 이벤트가 없습니다.");
+            appendLi("등록된 이벤트가 없습니다.");
           }
       });
-      }
+    }
 
 
-    // add event to the calendar
+
+    // 캘린더에 이벤트 추가한다.
     document.getElementById("addEvent").addEventListener("click", function(e){
         e.preventDefault();
 
-        var event = {
-          'summary': 'Google I/O 2015',
-          'location': '800 Howard St., San Francisco, CA 94103',
-          'description': 'A chance to hear more about Google\'s developer products.',
-          'start': {
-            'dateTime': '2017-02-12T09:00:00-07:00',
-            'timeZone': 'America/Los_Angeles'
-          },
-          'end': {
-            'dateTime': '2017-02-12T17:00:00-07:00',
-            'timeZone': 'America/Los_Angeles'
-          },
-        };
+        let event = makeEventMetadata();
 
         var request = gapi.client.calendar.events.insert({
             'calendarId': 'primary',
             'resource': event
         });
 
-
-
         request.execute(function(event, test) {
-          appendPre('Event created: ' + event.htmlLink);
+          appendLi('Event created: ' + event.htmlLink);
         });
     });
+
+
+    function makeEventMetadata (){
+        let addEventModal = document.querySelector(".addEventPopup");
+        let eventTitleDom = addEventModal.querySelector(".addEventPopup-title");
+        let eventDateDom = addEventModal.querySelector(".addEventPopup-date");
+        let eventDateEndDom = addEventModal.querySelector(".addEventPopup-date2");
+
+        let eventTitle = eventTitleDom.value;
+        let eventStartDate = new Date(eventDateDom.value);
+        let eventEndDate = new Date(eventDateEndDom.value);
+
+        let calenarEvent = {
+            summary: eventTitle,
+            start: {
+                dateTime: eventStartDate.toISOString()
+            },
+            end: {
+                dateTime: eventEndDate.toISOString()
+            }
+        };
+
+        return JSON.stringify(calenarEvent);
+    }
