@@ -72,12 +72,12 @@ handleClientLoad();
       // 로그인 정보가 바뀌면 ui 바꿔준다. (로그인하거나 로그아웃 할때 실행)
       function updateSigninStatus(isSignedIn) {
         if (isSignedIn) {
-          authorizeButton.style.display = 'none';
-          signoutButton.style.display = 'block';
+          authorizeButton.classList.remove("active");
+          signoutButton.classList.add("active");
           listUpcomingEvents();
         } else {
-          authorizeButton.style.display = 'block';
-          signoutButton.style.display = 'none';
+          authorizeButton.classList.add("active");
+          signoutButton.classList.remove("active");
         }
       }
 
@@ -127,10 +127,14 @@ handleClientLoad();
           'timeMin': (new Date()).toISOString(),
           'showDeleted': false,
           'singleEvents': true,
-          'maxResults': 20,
           'orderBy': 'startTime'
       }).then(function(response) {
           var events = response.result.items;
+
+          console.log("date: " + test.getDate());
+          console.log("day: " + test.getDay());
+          console.log("year: " + test.getFullYear());
+          console.log("month: " + test.getMonth());
 
           if (events.length > 0) {
             for (i = 0; i < events.length; i++) {
@@ -149,7 +153,16 @@ handleClientLoad();
 
 
 
-    // 캘린더에 이벤트 추가한다.
+
+    // 날짤별로 오브젝트 만든다. 
+
+
+
+
+
+
+
+    // 캘린더에 이벤트 추가한다.//////////////////////////////////////////////////////////////////////////////////
     document.getElementById("addEvent").addEventListener("click", function(e){
         e.preventDefault();
 
@@ -165,12 +178,10 @@ handleClientLoad();
         });
     });
 
-
     function makeEventMetadata (){
-        let addEventModal = document.querySelector(".addEventPopup");
-        let eventTitleDom = addEventModal.querySelector(".addEventPopup-title");
-        let eventDateDom = addEventModal.querySelector(".addEventPopup-date");
-        let eventDateEndDom = addEventModal.querySelector(".addEventPopup-date2");
+        let eventTitleDom = document.querySelector(".addEventPopup-title");
+        let eventDateDom = document.querySelector(".addEventPopup-date");
+        let eventDateEndDom = document.querySelector(".addEventPopup-date2");
 
         let eventTitle = eventTitleDom.value;
         let eventStartDate = new Date(eventDateDom.value);
