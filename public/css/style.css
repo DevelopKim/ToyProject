@@ -17,6 +17,36 @@ a {
     list-style: none;
 }
 
+.buttonWrapper {
+    text-align: center;
+}
+.button {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 5px;
+    background: red;
+    color: #fff;
+    text-align: left;
+    font-size: inherit;
+    border: 0;
+    box-sizing: border-box;
+}
+.button.white {
+    background: none;
+    color: #333;
+    border: 1px solid #999;
+}
+
+.inpuText {
+    border: 1px solid #ddd;
+    font-size: inherit;
+    height: 2em;
+    box-sizing: border-box;
+}
+.inpuText.block {
+    width: 100%;
+}
+
 
 
 /* layout */
@@ -25,7 +55,9 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 14px;
 }
-
+.contents {
+    padding-top: 70px;
+}
 .header {
     position: fixed;
     top: 0;
@@ -133,6 +165,7 @@ body {
 /* module */
 .modal {
     width: 300px;
+    padding: 15px;
     border: 1px solid red;
     box-sizing: border-box;
 }

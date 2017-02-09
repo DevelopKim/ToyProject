@@ -9,7 +9,6 @@
 </head>
 
 
-
 <body>
 
     <div class="wrapper">
@@ -43,18 +42,7 @@
                     <li><span>인천여행</span><span>더보기</span></li>
                 </ul>
             </div>
-
-            <div class="listUnit">
-                <div class="listUnit-date"><span class="day">월요일</span> <span class="date">2017.01.02</span></div>
-                <ul class="listUnit-item">
-                    <li><span>인천여행</span><span>더보기</span></li>
-                    <li><span>인천여행 한번 더하고 맛집 찾아가기</span><span>더보기</span></li>
-                </ul>
-            </div>
         </div>
-
-
-        <div id="content"></div>
 
 
         <a href="#" class="button" id="addEvent">Add Event</a>
@@ -66,11 +54,10 @@
     <button id="signout-button" style="display: none;">Sign Out</button>
 
 
-
-
-        <div class="modal">
-            <input type="text">
-            <input type="date">
+        <div class="modal addEventPopup">
+            <input type="datetime-title" class="addEventPopup-title">
+            <input type="datetime-local" class="addEventPopup-date">
+            <input type="datetime-local" class="addEventPopup-date2">
             <input type="submit" value="확인">
             <a href="#">취소</a>
         </div>
