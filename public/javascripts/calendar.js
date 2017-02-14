@@ -131,10 +131,12 @@ handleClientLoad();
       }).then(function(response) {
           var events = response.result.items;
 
-          console.log("date: " + test.getDate());
-          console.log("day: " + test.getDay());
-          console.log("year: " + test.getFullYear());
-          console.log("month: " + test.getMonth());
+
+
+        //   console.log("date: " + test.getDate());
+        //   console.log("day: " + test.getDay());
+        //   console.log("year: " + test.getFullYear());
+        //   console.log("month: " + test.getMonth());
 
           if (events.length > 0) {
             for (i = 0; i < events.length; i++) {
@@ -154,7 +156,32 @@ handleClientLoad();
 
 
 
-    // 날짤별로 오브젝트 만든다. 
+    // 날짜별로 오브젝트 만든다.
+    // function EventCategory (){
+    //     this.date = "";
+    //     this.eventLength = 0;
+    //
+    //     this.ul = null;
+    //     this.container = null;
+    //     this.eventId = [];
+    // }
+    //
+    // obj1 = new EventCategory();
+
+
+    class EventCategory {
+        constructor (){
+            this.date = 0;
+            this.ul = null;
+            this.eventLength = 0;
+            this.container = null;
+        }
+
+        createContainer (date){
+            let node = createElement("listUnit")
+        }
+
+    }
 
 
 
