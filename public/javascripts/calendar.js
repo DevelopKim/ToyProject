@@ -129,16 +129,9 @@ handleClientLoad();
           'singleEvents': true,
           'orderBy': 'startTime'
       }).then(function(response) {
-          var events = response.result.items;
+          let events = response.result.items;
 
-
-
-        //   console.log("date: " + test.getDate());
-        //   console.log("day: " + test.getDay());
-        //   console.log("year: " + test.getFullYear());
-        //   console.log("month: " + test.getMonth());
-
-          if (events.length > 0) {
+          /* if (events.length > 0) {
             for (i = 0; i < events.length; i++) {
               var event = events[i];
               var when = event.start.dateTime;
@@ -149,42 +142,68 @@ handleClientLoad();
             }
           } else {
             appendLi("등록된 이벤트가 없습니다.");
-          }
+        } */
+
+        if (events.length <= 0){ return false; }
+
+        let eventDate = [];
+        let EventCategorys = {};
+
+        // 날짜별로 오브젝트 만든다.
+        for (let i = 0; i < events.length; i++){
+            let orgDate = events[i].start.dateTime ? events[i].start.dateTime : events[i].start.date;
+
+            if (eventDate.indexOf(orgDate) >= 0){
+
+            } else {
+                let trimedDate = orgDate.replace(/(\d{4}\-\d{2}\-\d{2}).+/, '$1');
+                let dateOnly = trimedDate.replace(/\-/g, "");
+                let dateObj = new Date(orgDate);
+
+                EventCategorys["eventContainer" + dateOnly] = new EventCategory(dateObj);
+                eventDate.push(orgDate);
+            }
+        }
       });
     }
 
 
 
-
     // 날짜별로 오브젝트 만든다.
-    // function EventCategory (){
-    //     this.date = "";
-    //     this.eventLength = 0;
-    //
-    //     this.ul = null;
-    //     this.container = null;
-    //     this.eventId = [];
-    // }
-    //
-    // obj1 = new EventCategory();
-
-
     class EventCategory {
-        constructor (){
+        constructor (date){
             this.date = 0;
-            this.ul = null;
             this.eventLength = 0;
             this.container = null;
+            this.createEventCategorys(date);
         }
 
-        createContainer (date){
-            let node = createElement("listUnit")
+        // 이벤트가 등록된 날짜를 돔에 추가한다.
+        createEventCategorys (date){
+            let bodyNode = document.querySelector(".contents");
+            let wrapperNode = document.createElement("div");
+            wrapperNode.classList.add("listUnit");
+
+            let days = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+            let koreanDate = this.getKoreanDate(date);
+            let day = date.getDay();
+
+            let dateStr = "<div class='listUnit-date'><span class='day'>" + days[day] + "</span> <span class='date'>" + koreanDate + "</span></div>";
+            let ulStr = "<ul class='listUnit-item'></ul>";
+            let resultStr = dateStr + ulStr;
+
+            wrapperNode.innerHTML = resultStr;
+            bodyNode.appendChild(wrapperNode);
+
+            this.container = wrapperNode;
+            this.date = koreanDate;
         }
 
+        getKoreanDate (date){
+            let result = new Intl.DateTimeFormat('ko-KR').format(date);
+            return result;
+        }
     }
-
-
-
 
 
 
