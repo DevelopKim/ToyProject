@@ -150,7 +150,7 @@ handleClientLoad();
         let EventCategorys = {};
 
         // 날짜별로 오브젝트 만든다.
-        for (let i = 0; i < events.length; i++){
+        for (let i = 0; i < events.length; i++) {
             let orgDate = events[i].start.dateTime ? events[i].start.dateTime : events[i].start.date;
 
             if (eventDate.indexOf(orgDate) >= 0){
@@ -180,19 +180,28 @@ handleClientLoad();
 
         // 이벤트가 등록된 날짜를 돔에 추가한다.
         createEventCategorys (date){
-            let bodyNode = document.querySelector(".contents");
-            let wrapperNode = document.createElement("div");
-            wrapperNode.classList.add("listUnit");
-
             let days = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
             let koreanDate = this.getKoreanDate(date);
             let day = date.getDay();
 
-            let dateStr = "<div class='listUnit-date'><span class='day'>" + days[day] + "</span> <span class='date'>" + koreanDate + "</span></div>";
-            let ulStr = "<ul class='listUnit-item'></ul>";
-            let resultStr = dateStr + ulStr;
+            let bodyNode = document.querySelector(".contents");
+            let domClass = {
+                wrapper: "listUnit",
+                Item: "listUnit-date",
+                day: "day",
+                date: "date",
+                ul: "listUnit-item"
+            }
+            let domStr = "<div class='" + domClass.Item + "'>" +
+                            "<span class='" + domClass.day + "'>" + days[day] +"</span>" +
+                            "<span class='" + domClass.date + "'>" + koreanDate + "</span>" +
+                            "<ul class='" + domClass.ul + "'></ul>" +
+                        "</div>";
 
-            wrapperNode.innerHTML = resultStr;
+            let wrapperNode = document.createElement("div");
+            wrapperNode.classList.add(domClass.wrapper);
+
+            wrapperNode.innerHTML = domStr;
             bodyNode.appendChild(wrapperNode);
 
             this.container = wrapperNode;
@@ -204,6 +213,18 @@ handleClientLoad();
             return result;
         }
     }
+
+    EventCategory.prototype.appendLi = appendLi;
+
+
+    function appendLi (targetObj, data){
+        targetObj.querySelector(".listUnit-item");
+        var li = document.createElement("li");
+
+        li.innerHTML = "<span>" + data + "</span>";
+
+    }
+
 
 
 
