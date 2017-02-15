@@ -72,6 +72,7 @@ body {
     color: #fff;
     text-align: center;
     box-sizing: border-box;
+    z-index: 10000;
 }
 .header-title {
     display: inline-block;
@@ -116,6 +117,7 @@ body {
     transform: translate3d(-400px, 0, 0);
     box-sizing: border-box;
     transition: all 0.3s;
+    z-index: 1000;
 }
 .gnb.open {
     transform: translate3d(0, 0, 0);
@@ -184,8 +186,19 @@ body {
     list-style: none;
 }
 .listUnit-item li {
+    position: relative;
     padding: 6px;
     border-bottom: 1px solid #eee;
+}
+.listUnit-edit {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -10px;
+    width: 30px;
+    height: 20px;
+    text-align: center;
 }
 
 
