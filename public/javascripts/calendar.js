@@ -1,41 +1,20 @@
 
-
-
-
-
 // 초기화 실행
 handleClientLoad();
 
-    // google api console에서 확인할 수 있다.
+
       var CLIENT_ID = '703268525-pifhit4jthctje2sokdpqe9cg55mavas.apps.googleusercontent.com';
       var API_KEY = 'AIzaSyAiGCbpePHFkTEcWQMn9CJw4_UvCVSEbwQ';
-
-      // Array of API discovery doc URLs for APIs used by the quickstart
       var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-
-      // scope 정보.
-      // calendar.readonly 이면 읽기만 가능하고, calendar이면 읽기/쓰기 둘 다 가능하다.
-      // 하나의 clientId로 여러개의 어플케이션에 쓸 수 있기 때문에 scope으로 현재 어플리케이션에서 사용할 api를 지정해준다.
-      // included, separated by spaces.
       var SCOPES = "https://www.googleapis.com/auth/calendar";
 
       var authorizeButton = document.getElementById('authorize-button');
       var signoutButton = document.getElementById('signout-button');
 
-
-
-
-      // client 라이브러리를 불러온다.
-      // :auth2 는 옵션인데, client와 auth2 두개의 라이브러리를 불러오게 한다.
-      // :auth2가 없으면 gapi.client.init에서 auth2를 불러온다. -> handleClientLoad에서 불러주는게 http 요청 하나를 줄일 수 있다.
       function handleClientLoad() {
         gapi.load('client:auth2', initClient);
       }
 
-      // api 초기화하고 sign-in state를 설정한다.
-      // 초기화(initialization)란? data object 또는 variable에 최초의 값(initial value)을 할당하는 것이다.
-      // oop에서는 constructor코드에 들어가는 경우가 많음.
-      // api key 세팅, discovery doc 로딩, auth, initializing auth가 끝난 후 goog.Thenable 오브젝트를 반환한다.
       function initClient() {
         gapi.client.init({
             apiKey: API_KEY,
@@ -45,13 +24,10 @@ handleClientLoad();
       }).then(function () {
           var authObj = gapi.auth2.getAuthInstance();
 
-          // 로그인 정보가 바뀌면 callback 함수 실행.
           authObj.isSignedIn.listen(updateSigninStatus);
 
-          // 로그인 되있는지 체크
           updateSigninStatus(authObj.isSignedIn.get());
 
-          // 로그인, 로그아웃 버튼에 이벤트 등록한다.
           authorizeButton.onclick = handleAuthClick;
           signoutButton.onclick = handleSignoutClick;
         });
@@ -88,26 +64,6 @@ handleClientLoad();
         ul.appendChild(div);
       }
 
-
-       // 유저는 하나의 primary calendar를 가지고 있으며, 하나 이상의 다른 캘린더를 가질 수 있다.
-       // 유저(organizer)는 이벤트를 생성하고 다른 유저(attendee)를 초대할 수 있다.
-       // 여러 사람들과 공유되는 이벤트일 경우, 이벤트 입장에서는 공유되는 캘린더(이벤트가 등록된 캘린더)가 organizer이며, 캘린더를 공유하는 유저가 attendees가 된다.
-
-       // event: 캘린더에 등록된 이벤트 (시작일, 종료일, 제목 등을 갖는다.)
-       //   event는 single(한번에 끝남. occurrence), recurring(반복되는 일정. containing multiple occurrences) 두가지가 있다.
-       //   특정 시간(timed)에 발생할 수도 있고 하루 종일(all-day) 발생할 수도 있다.
-       //   하나의 organizer(캘린더)를 가지고, 여러 attendees(초대된 유저의 primary calendar)를 가진다.
-       // calendar: 이벤트의 모음이다. 각각의 캘린더는 metadata를 가지고 있다. Calendars collection는 존재하는 모든 캘린더를 담고 있다.
-       //   기본으록 생성되는 캘린더를 Primary calendar라고 한다 (캘린더의 id는 보통 유저의 이메일 주소이다).
-       // calendar list: 캘린더 ui 상의 모든 캘린더 리스트. 캘린더 하나의 메타데이터는 CalendarListEntry에 있다. ("kind": "calendar#calendarListEntry")
-       // setting: Calendar UI의 세팅
-       // ACL: 다른 사용자가 어떤 허용범위에서 캘런더에 접근할 수 있는지 정해놓은 룰. An access control rule.
-       // color: Calendar UI에서 정해놓은 색.(이벤트 색과 캘린더 색 두가지가 있다.)
-       // free/busy: 스케쥴된 이벤트가 있는 캘린더는 busy, 없는 캘린더는 free
-
-       // Reminders와 Notifications을 제공한다.
-       // remnder: 이벤트 시작 일정 시간 전에 알려준다.
-       // notification: 이벤트가 수정될 때 알려준다.
 
       function listUpcomingEvents() {
         gapi.client.calendar.events.list({ // 캘린더에 등록되있는 이벤트 리스트 오브젝트를 반환한다.
