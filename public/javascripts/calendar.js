@@ -65,6 +65,19 @@ handleClientLoad();
       }
 
 
+
+
+
+      let newEventObjs = {}; // 일정을 날짜별로 묶어서 만들 오브젝트
+
+      // 20170210 형태로 바꿔준다.
+      function resetDateFormat (date){
+          let trimmedDate = date.match(/(\d{4})\-(\d{2})\-(\d{2})/);
+          let result = trimmedDate[0].replace(/\-/g, "");
+          return result;
+      }
+
+
       // 모든 일정 화면에 뿌려준다.
       function listUpcomingEvents() {
             gapi.client.calendar.events.list({
@@ -82,18 +95,15 @@ handleClientLoad();
                 return false;
             }
 
-            let newEventObjs = {}; // 일정을 날짜별로 묶어서 만들 오브젝트
-
             for (let i = 0; i < events.length; i++) { // 날짜별로 오브젝트 만든다.
                 let orgDate = events[i].start.dateTime ? events[i].start.dateTime : events[i].start.date;
-                let trimedDate = orgDate.replace(/(\d{4})\-(\d{2})\-(\d{2})?.+/, '$1$2$3');
+                let trimedDate = resetDateFormat(orgDate);
 
                 if (newEventObjs.hasOwnProperty(trimedDate)){
                     newEventObjs[trimedDate].appendLi(events[i].summary);
                 } else {
-                    let dateObj = new Date(orgDate);
-                    newEventObjs[trimedDate] = new newEvent();
-                    newEventObjs[trimedDate].drawDom(dateObj);
+                    newEventObjs[trimedDate] = new newEvent(orgDate);
+                    newEventObjs[trimedDate].drawDom();
                     newEventObjs[trimedDate].appendLi(events[i].summary);
                 }
             }
@@ -102,23 +112,25 @@ handleClientLoad();
 
 
 
-
-
     // 날짜별로 오브젝트 만든다.
     class newEvent {
-        constructor (){
+        constructor (date){ // 정리 안된 날짜 그대로.
             this.date = 0;
+            this.orgDate = date;
             this.eventLength = 0;
             this.node = null;
             this.ul = null;
         }
 
         // 이벤트가 등록된 날짜를 돔에 추가한다.
-        drawDom (date){
-            let days = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
-            let koreanDate = this.getKoreanDate(date);
-            let day = date.getDay();
+        drawDom (){
             let wrapperNode = document.querySelector(".contents");
+
+            let dateObj = new Date(this.orgDate);
+            let koreanDate = this.getKoreanDate(dateObj);
+
+            let days = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+            let day = dateObj.getDay();
 
             let domStr = "<div class='listUnit-date'>" +
                                 "<span class='day'>" + days[day] +"</span>" +
@@ -158,13 +170,7 @@ handleClientLoad();
     }
 
 
-
-
-
-
-
-
-    // 캘린더에 이벤트 추가한다.//////////////////////////////////////////////////////////////////////////////////
+    // 캘린더에 이벤트 추가한다.
     document.getElementById("addEvent").addEventListener("click", function(e){
         e.preventDefault();
 
@@ -175,8 +181,16 @@ handleClientLoad();
             'resource': event
         });
 
-        request.execute(function(event, test) {
-          appendLi('Event created: ' + event.htmlLink);
+        request.execute(function(event) { // event: 생성된 이벤트 오브젝트
+          let trimedDate = resetDateFormat(event.start.dateTime);
+
+          if (newEventObjs[trimedDate]){
+              newEventObjs[trimedDate].appendLi(event.summary);
+          } else {
+              newEventObjs[trimedDate] = new newEvent(event.start.dateTime);
+              newEventObjs[trimedDate].drawDom();
+              newEventObjs[trimedDate].appendLi(event.summary);
+          }
         });
     });
 
