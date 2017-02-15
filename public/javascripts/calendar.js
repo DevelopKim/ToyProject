@@ -110,6 +110,7 @@ handleClientLoad();
             this.date = 0;
             this.eventLength = 0;
             this.node = null;
+            this.ul = null;
         }
 
         // 이벤트가 등록된 날짜를 돔에 추가한다.
@@ -119,23 +120,19 @@ handleClientLoad();
             let day = date.getDay();
             let wrapperNode = document.querySelector(".contents");
 
-            let domClass = {
-                node: "listUnit",
-                Item: "listUnit-date",
-                day: "day",
-                date: "date",
-                ul: "listUnit-item"
-            };
-            let domStr = "<div class='" + domClass.Item + "'>" +
-                                "<span class='" + domClass.day + "'>" + days[day] +"</span>" +
-                                "<span class='" + domClass.date + "'>" + koreanDate + "</span>" +
-                                "<ul class='" + domClass.ul + "'></ul>" +
+            let domStr = "<div class='listUnit-date'>" +
+                                "<span class='day'>" + days[day] +"</span>" +
+                                "<span class='date'>" + koreanDate + "</span>" +
                             "</div>";
 
-            let node = this.createNode("div", domClass.node);
+            let node = this.createNode("div", "listUnit");
+            let ul = this.createNode("ul", "listUnit-item");
+
             node.innerHTML = domStr;
+            node.appendChild(ul);
             wrapperNode.appendChild(node);
             this.node = node;
+            this.ul = ul;
             this.date = koreanDate;
         }
 
@@ -154,8 +151,8 @@ handleClientLoad();
 
         appendLi (data){
             var li = this.createNode("li");
-            li.innerHTML = "<span>" + data + "</span>";
-            this.node.appendChild(li);
+            li.innerHTML = "<span>" + data + "</span>" + "<a href='#' class='listUnit-edit'>수정</a>";
+            this.ul.appendChild(li);
             this.eventLength += 1;
         }
     }
