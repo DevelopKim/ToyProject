@@ -53,10 +53,13 @@ a {
 body {
     margin: 0;
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 14px;
+    font-size: 12px;
 }
 .contents {
-    padding-top: 70px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding-top: 60px;
 }
 .header {
     position: fixed;
@@ -99,12 +102,7 @@ body {
     right: 20px;
     white-space: nowrap;
 }
-.header-add {
 
-}
-.header-search {
-
-}
 
 .gnb {
     position: fixed;
@@ -155,12 +153,6 @@ body {
     background: #fff;
 }
 
-.contents {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
 
 
 /* module */
@@ -172,6 +164,28 @@ body {
 }
 .modal .buttonWrapper {
     margin-bottom: 0;
+}
+
+.listUnit {
+
+}
+.listUnit-date {
+    padding: 4px 6px;
+    background: #eee;
+}
+.listUnit-date .date {
+    margin-left: 10px;
+    font-size: 0.8em;
+    color: #999;
+}
+.listUnit-item {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.listUnit-item li {
+    padding: 6px;
+    border-bottom: 1px solid #eee;
 }
 
 
