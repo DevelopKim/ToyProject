@@ -65,90 +65,77 @@ handleClientLoad();
       }
 
 
+      // 모든 일정 화면에 뿌려준다.
       function listUpcomingEvents() {
-        gapi.client.calendar.events.list({ // 캘린더에 등록되있는 이벤트 리스트 오브젝트를 반환한다.
-          'calendarId': 'primary',
-          'timeMin': (new Date()).toISOString(),
-          'showDeleted': false,
-          'singleEvents': true,
-          'orderBy': 'startTime'
-      }).then(function(response) {
-          let events = response.result.items;
+            gapi.client.calendar.events.list({
+              'calendarId': 'primary',
+              'timeMin': (new Date()).toISOString(),
+              'showDeleted': false,
+              'singleEvents': true,
+              'orderBy': 'startTime'
+          }).then(function(response) {
+            let events = response.result.items;
 
-          /* if (events.length > 0) {
-            for (i = 0; i < events.length; i++) {
-              var event = events[i];
-              var when = event.start.dateTime;
-              if (!when) {
-                when = event.start.date;
-              }
-              appendLi(event.summary, when);
+            if (events.length <= 0){
+                let content = document.querySelector(".contents");
+                content.innerHTML = "등록된 일정이 없습니다."
+                return false;
             }
-          } else {
-            appendLi("등록된 이벤트가 없습니다.");
-        } */
 
-        if (events.length <= 0){ return false; }
+            let newEventObjs = {}; // 일정을 날짜별로 묶어서 만들 오브젝트
 
-        let eventDate = [];
-        let EventCategorys = {};
+            for (let i = 0; i < events.length; i++) { // 날짜별로 오브젝트 만든다.
+                let orgDate = events[i].start.dateTime ? events[i].start.dateTime : events[i].start.date;
+                let trimedDate = orgDate.replace(/(\d{4})\-(\d{2})\-(\d{2})?.+/, '$1$2$3');
 
-        // 날짜별로 오브젝트 만든다.
-        for (let i = 0; i < events.length; i++) {
-            let orgDate = events[i].start.dateTime ? events[i].start.dateTime : events[i].start.date;
-
-            if (eventDate.indexOf(orgDate) >= 0){
-
-            } else {
-                let trimedDate = orgDate.replace(/(\d{4}\-\d{2}\-\d{2}).+/, '$1');
-                let dateOnly = trimedDate.replace(/\-/g, "");
-                let dateObj = new Date(orgDate);
-
-                EventCategorys["eventContainer" + dateOnly] = new EventCategory(dateObj);
-                eventDate.push(orgDate);
+                if (newEventObjs.hasOwnProperty(trimedDate)){
+                    newEventObjs[trimedDate].appendLi(events[i].summary);
+                } else {
+                    let dateObj = new Date(orgDate);
+                    newEventObjs[trimedDate] = new newEvent();
+                    newEventObjs[trimedDate].drawDom(dateObj);
+                    newEventObjs[trimedDate].appendLi(events[i].summary);
+                }
             }
-        }
-      });
-    }
+        });
+      }
+
+
 
 
 
     // 날짜별로 오브젝트 만든다.
-    class EventCategory {
-        constructor (date){
+    class newEvent {
+        constructor (){
             this.date = 0;
             this.eventLength = 0;
-            this.container = null;
-            this.createEventCategorys(date);
+            this.node = null;
         }
 
         // 이벤트가 등록된 날짜를 돔에 추가한다.
-        createEventCategorys (date){
+        drawDom (date){
             let days = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
             let koreanDate = this.getKoreanDate(date);
             let day = date.getDay();
+            let wrapperNode = document.querySelector(".contents");
 
-            let bodyNode = document.querySelector(".contents");
             let domClass = {
-                wrapper: "listUnit",
+                node: "listUnit",
                 Item: "listUnit-date",
                 day: "day",
                 date: "date",
                 ul: "listUnit-item"
-            }
+            };
             let domStr = "<div class='" + domClass.Item + "'>" +
-                            "<span class='" + domClass.day + "'>" + days[day] +"</span>" +
-                            "<span class='" + domClass.date + "'>" + koreanDate + "</span>" +
-                            "<ul class='" + domClass.ul + "'></ul>" +
-                        "</div>";
+                                "<span class='" + domClass.day + "'>" + days[day] +"</span>" +
+                                "<span class='" + domClass.date + "'>" + koreanDate + "</span>" +
+                                "<ul class='" + domClass.ul + "'></ul>" +
+                            "</div>";
 
-            let wrapperNode = document.createElement("div");
-            wrapperNode.classList.add(domClass.wrapper);
-
-            wrapperNode.innerHTML = domStr;
-            bodyNode.appendChild(wrapperNode);
-
-            this.container = wrapperNode;
+            let node = this.createNode("div", domClass.node);
+            node.innerHTML = domStr;
+            wrapperNode.appendChild(node);
+            this.node = node;
             this.date = koreanDate;
         }
 
@@ -156,18 +143,25 @@ handleClientLoad();
             let result = new Intl.DateTimeFormat('ko-KR').format(date);
             return result;
         }
+
+        createNode (tag, className){
+            var newNode = document.createElement(tag);
+            if (className){
+                newNode.classList.add(className);
+            }
+            return newNode;
+        }
+
+        appendLi (data){
+            var li = this.createNode("li");
+            li.innerHTML = "<span>" + data + "</span>";
+            this.node.appendChild(li);
+            this.eventLength += 1;
+        }
     }
 
-    EventCategory.prototype.appendLi = appendLi;
 
 
-    function appendLi (targetObj, data){
-        targetObj.querySelector(".listUnit-item");
-        var li = document.createElement("li");
-
-        li.innerHTML = "<span>" + data + "</span>";
-
-    }
 
 
 
