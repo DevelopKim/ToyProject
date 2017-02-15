@@ -1,16 +1,4 @@
 
-// 어플리케이션에서 개인의 데이터를 읽거나 쓰기 위해서는
-// googl api를 실행할 때 google auth sever에 authorization 정보를 줘야 한다. (api key 만으로는 안됨)
-// google api console에서 OAuth 2.0 client ID를 발급받아서 어플리케이션을 init 할 때, 넘겨줘야 한다.
-// 이때, OAuth 2.0 protocol를 사용하는데 과정은 다음과 같다.
-// 1. make access-token request (browser redirect to Google방법으로 요청한다.)
-// 2. user consent (사용자가 로그인 후, 권한 승인하는 단계)
-// 3. 사용자가 승인하면 Google Authorization Server에서 access-token을 발급한다.
-// 4. google api에 access-tokend을 넘겨준다. (http authorization header에 담아서)
-// 5. access-tokend은 일정시간이 지나면 만료된다. 만료되면 새로운 access-tokend을 받으면 된다. (refresh token)
-
-// google api가 한두개가 아니니.... google api client libraries 하나로 구성해 놓았다.
-
 
 
 
