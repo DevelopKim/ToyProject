@@ -190,7 +190,7 @@ body {
     padding: 6px;
     border-bottom: 1px solid #eee;
 }
-.listUnit-edit {
+.listUnit-delete {
     display: inline-block;
     position: absolute;
     right: 0;
