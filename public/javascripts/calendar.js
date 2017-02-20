@@ -2,6 +2,9 @@
 // 초기화 실행
 handleClientLoad();
 
+// 토큰 값 가져오기
+// authObj.currentUser.get().getAuthResponse().access_token
+
 
       var CLIENT_ID = '703268525-pifhit4jthctje2sokdpqe9cg55mavas.apps.googleusercontent.com';
       var API_KEY = 'AIzaSyAiGCbpePHFkTEcWQMn9CJw4_UvCVSEbwQ';
@@ -25,7 +28,6 @@ handleClientLoad();
           var authObj = gapi.auth2.getAuthInstance();
 
           authObj.isSignedIn.listen(updateSigninStatus);
-
           updateSigninStatus(authObj.isSignedIn.get());
 
           authorizeButton.onclick = handleAuthClick;
@@ -54,17 +56,6 @@ handleClientLoad();
       function handleSignoutClick(event) {
         gapi.auth2.getAuthInstance().signOut();
       }
-
-      // dom에 이벤트 리스트 추가한다.
-      //@param {string} message Text to be placed in pre element.
-      function appendLi(message, date) {
-        var ul = document.querySelector(".contents");
-        var div = document.createElement("div");
-        div.innerHTML = message + "<span class='listUnit-date'>" + date + "</span>";
-        ul.appendChild(div);
-      }
-
-
 
 
 
@@ -95,20 +86,44 @@ handleClientLoad();
                 return false;
             }
 
-            for (let i = 0; i < events.length; i++) { // 날짜별로 오브젝트 만든다.
+            // 날짜별로 오브젝트 만들고 메서드 사용해서 화면에 보여준다.
+            for (let i = 0; i < events.length; i++) {
                 let orgDate = events[i].start.dateTime ? events[i].start.dateTime : events[i].start.date;
                 let trimedDate = resetDateFormat(orgDate);
 
                 if (newEventObjs.hasOwnProperty(trimedDate)){
-                    newEventObjs[trimedDate].appendLi(events[i].summary);
+                    newEventObjs[trimedDate].appendLi(events[i]);
                 } else {
                     newEventObjs[trimedDate] = new newEvent(orgDate);
                     newEventObjs[trimedDate].drawDom();
-                    newEventObjs[trimedDate].appendLi(events[i].summary);
+                    newEventObjs[trimedDate].appendLi(events[i]);
                 }
             }
         });
       }
+
+
+      
+      // 일정 삭제한다.
+      function deleteEvent (){
+          document.querySelector(".listUnit-delete").addEventListener("click", function(){
+              var content = document.querySelector(".contents");
+              var parent = this.parentNode;
+              var id = parent.getAttribute("data-id");
+
+              var request = gapi.client.calendar.events.delete({
+                  'calendarId': 'primary',
+                  'eventId': id
+              });
+
+              request.execute(function(event) {
+                console.log("test")
+              });
+
+          });
+      }
+
+
 
 
 
@@ -161,10 +176,12 @@ handleClientLoad();
             return newNode;
         }
 
-        appendLi (data){
+        appendLi (event){
             var li = this.createNode("li");
-            li.innerHTML = "<span>" + data + "</span>" + "<a href='#' class='listUnit-edit'>수정</a>";
+            li.setAttribute("data-id", event.id);
+            li.innerHTML = "<span>" + event.summary + "</span>" + "<a href='#' class='listUnit-delete'>삭제</a>";
             this.ul.appendChild(li);
+
             this.eventLength += 1;
         }
     }
@@ -181,18 +198,20 @@ handleClientLoad();
             'resource': event
         });
 
-        request.execute(function(event) { // event: 생성된 이벤트 오브젝트
+        // event: 생성된 이벤트 오브젝트
+        request.execute(function(event) {
           let trimedDate = resetDateFormat(event.start.dateTime);
 
           if (newEventObjs[trimedDate]){
-              newEventObjs[trimedDate].appendLi(event.summary);
+              newEventObjs[trimedDate].appendLi(event);
           } else {
               newEventObjs[trimedDate] = new newEvent(event.start.dateTime);
               newEventObjs[trimedDate].drawDom();
-              newEventObjs[trimedDate].appendLi(event.summary);
+              newEventObjs[trimedDate].appendLi(event);
           }
         });
     });
+
 
     function makeEventMetadata (){
         let eventTitleDom = document.querySelector(".addEventPopup-title");
