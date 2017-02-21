@@ -59,14 +59,34 @@ handleClientLoad();
 
 
 
-      let newEventObjs = {}; // 일정을 날짜별로 묶어서 만들 오브젝트
 
-      // 20170210 형태로 바꿔준다.
-      function resetDateFormat (date){
-          let trimmedDate = date.match(/(\d{4})\-(\d{2})\-(\d{2})/);
-          let result = trimmedDate[0].replace(/\-/g, "");
-          return result;
+
+      let helper = {
+          createNode: function (tag, className){
+              var newNode = document.createElement(tag);
+              if (className){
+                  newNode.classList.add(className);
+              }
+              return newNode;
+          },
+
+          // 20170210 형태로 바꿔준다.
+          resetDateFormat: function (date){
+              let trimmedDate = date.match(/(\d{4})\-(\d{2})\-(\d{2})/);
+              let result = trimmedDate[0].replace(/\-/g, "");
+              return result;
+          }
       }
+
+
+      let commonEl = {
+          wrapperNode: document.querySelector(".contents"),
+          // 일정을 날짜별로 묶어서 만들 오브젝트
+          eventGroups: {}
+      }
+
+
+
 
 
       // 모든 일정 화면에 뿌려준다.
@@ -81,66 +101,41 @@ handleClientLoad();
             let events = response.result.items;
 
             if (events.length <= 0){
-                let content = document.querySelector(".contents");
-                content.innerHTML = "등록된 일정이 없습니다."
+                commonEl.wrapperNode.innerHTML = "등록된 일정이 없습니다."
                 return false;
             }
 
             // 날짜별로 오브젝트 만들고 메서드 사용해서 화면에 보여준다.
             for (let i = 0; i < events.length; i++) {
                 let orgDate = events[i].start.dateTime ? events[i].start.dateTime : events[i].start.date;
-                let trimedDate = resetDateFormat(orgDate);
+                let trimedDate = helper.resetDateFormat(orgDate);
 
-                if (newEventObjs.hasOwnProperty(trimedDate)){
-                    newEventObjs[trimedDate].appendLi(events[i]);
+                if (commonEl.eventGroups[trimedDate]){
+                    commonEl.eventGroups[trimedDate].appendLi(events[i]);
                 } else {
-                    newEventObjs[trimedDate] = new newEvent(orgDate);
-                    newEventObjs[trimedDate].drawDom();
-                    newEventObjs[trimedDate].appendLi(events[i]);
+                    commonEl.eventGroups[trimedDate] = new eventGroup(orgDate);
+                    commonEl.eventGroups[trimedDate].drawDom();
+                    commonEl.eventGroups[trimedDate].appendLi(events[i]);
                 }
             }
         });
       }
 
 
-      
-      // 일정 삭제한다.
-      function deleteEvent (){
-          document.querySelector(".listUnit-delete").addEventListener("click", function(){
-              var content = document.querySelector(".contents");
-              var parent = this.parentNode;
-              var id = parent.getAttribute("data-id");
-
-              var request = gapi.client.calendar.events.delete({
-                  'calendarId': 'primary',
-                  'eventId': id
-              });
-
-              request.execute(function(event) {
-                console.log("test")
-              });
-
-          });
-      }
-
-
-
 
 
     // 날짜별로 오브젝트 만든다.
-    class newEvent {
+    class eventGroup {
         constructor (date){ // 정리 안된 날짜 그대로.
             this.date = 0;
             this.orgDate = date;
             this.eventLength = 0;
-            this.node = null;
+            this.node = null; // .listUnit
             this.ul = null;
         }
 
         // 이벤트가 등록된 날짜를 돔에 추가한다.
         drawDom (){
-            let wrapperNode = document.querySelector(".contents");
-
             let dateObj = new Date(this.orgDate);
             let koreanDate = this.getKoreanDate(dateObj);
 
@@ -152,12 +147,12 @@ handleClientLoad();
                                 "<span class='date'>" + koreanDate + "</span>" +
                             "</div>";
 
-            let node = this.createNode("div", "listUnit");
-            let ul = this.createNode("ul", "listUnit-item");
+            let node = helper.createNode("div", "listUnit");
+            let ul = helper.createNode("ul", "listUnit-item");
 
             node.innerHTML = domStr;
             node.appendChild(ul);
-            wrapperNode.appendChild(node);
+            commonEl.wrapperNode.appendChild(node);
             this.node = node;
             this.ul = ul;
             this.date = koreanDate;
@@ -168,26 +163,67 @@ handleClientLoad();
             return result;
         }
 
-        createNode (tag, className){
-            var newNode = document.createElement(tag);
-            if (className){
-                newNode.classList.add(className);
-            }
-            return newNode;
+        appendLi (event){
+            var newSchedule = new schedule(event);
+            newSchedule.eventGroup = this;
+
+            this.ul.appendChild(newSchedule.li);
+            this.eventLength += 1;
         }
 
-        appendLi (event){
-            var li = this.createNode("li");
-            li.setAttribute("data-id", event.id);
-            li.innerHTML = "<span>" + event.summary + "</span>" + "<a href='#' class='listUnit-delete'>삭제</a>";
-            this.ul.appendChild(li);
+        deleteLi (targetLi){
+            this.ul.removeChild(targetLi);
+            this.eventLength -= 1;
 
-            this.eventLength += 1;
+            // 등록된 일정이 없을때, eventGroup 오브젝트 삭제한다.
+            if (this.eventLength === 0){
+                commonEl.wrapperNode.removeChild(this.node);
+                let trimmedDate = helper.resetDateFormat(this.orgDate);
+                commonEl.eventGroups[trimmedDate] = null;
+            }
         }
     }
 
 
-    // 캘린더에 이벤트 추가한다.
+
+    // 등록된 일정 오브젝트
+    class schedule {
+        constructor (event){
+            this.id = event.id;
+            this.li = helper.createNode("li");
+            this.li.innerHTML = "<span>" + event.summary + "</span>" + "<a href='#' class='listUnit-delete'>삭제</a>";
+            // 일정을 생성한 부모 object
+            this.eventGroup = null;
+            this.deleteBtn = this.li.querySelector(".listUnit-delete");
+
+            // 새로 생성된 dom에 이벤트 리스너 등록한다.
+            this.addEvent(this.deleteBtn, "click", this.deleteSchedule);
+        }
+
+        // 새로 생성된 dom에 이벤트 리스너 등록한다.
+        addEvent (targetEl, eventName, func){
+            targetEl.addEventListener(eventName, function (event){
+                event.preventDefault();
+                func.call(this);
+            }.bind(this))
+        }
+
+        // 일정 삭제한다.
+        deleteSchedule (){
+            var request = gapi.client.calendar.events.delete({
+                'calendarId': 'primary',
+                'eventId': this.id
+            });
+            request.execute(function(event) {
+                this.eventGroup.deleteLi(this.li);
+            }.bind(this));
+        }
+    }
+
+
+
+
+    // 캘린더에 일정 추가한다.
     document.getElementById("addEvent").addEventListener("click", function(e){
         e.preventDefault();
 
@@ -200,14 +236,14 @@ handleClientLoad();
 
         // event: 생성된 이벤트 오브젝트
         request.execute(function(event) {
-          let trimedDate = resetDateFormat(event.start.dateTime);
+          let trimedDate = helper.resetDateFormat(event.start.dateTime);
 
-          if (newEventObjs[trimedDate]){
-              newEventObjs[trimedDate].appendLi(event);
+          if (commonEl.eventGroups[trimedDate]){
+              commonEl.eventGroups[trimedDate].appendLi(event);
           } else {
-              newEventObjs[trimedDate] = new newEvent(event.start.dateTime);
-              newEventObjs[trimedDate].drawDom();
-              newEventObjs[trimedDate].appendLi(event);
+              commonEl.eventGroups[trimedDate] = new eventGroup(event.start.dateTime);
+              commonEl.eventGroups[trimedDate].drawDom();
+              commonEl.eventGroups[trimedDate].appendLi(event);
           }
         });
     });
