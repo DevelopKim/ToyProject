@@ -23,7 +23,7 @@ a {
 }
 .button {
     display: inline-block;
-    padding: 5px;
+    padding: 5px 10px;
     background: #40901b;
     color: #fff;
     text-align: left;
@@ -81,6 +81,11 @@ body {
     vertical-align: middle;
     font-size: 1.2rem;
 }
+.header-title .day {
+    font-size: 0.7em;
+    font-weight: 300;
+    line-height: 1em;
+}
 .header-menu,
 .header-right {
     position: absolute;
@@ -90,14 +95,20 @@ body {
 .header-add,
 .header-search {
     display: inline-block;
-    width: 40px;
-    height: 40px;
-    border: 1px solid pink;
+    width: 20px;
+    height: 20px;
+    margin-top: 7px;
+    /*border: 1px solid #fff;*/
     box-sizing: border-box;
-    text-indent: -9999px;
+    /*text-indent: -9999px;*/
 }
 .header-menu {
     left: 20px;
+}
+.header-menu svg {
+    width: 100%;
+    height: 100%;
+    fill: #fff;
 }
 .header-right {
     right: 20px;
@@ -168,6 +179,9 @@ body {
 .modal .buttonWrapper {
     margin-bottom: 0;
 }
+.modal .buttonWrapper .button {
+    margin: 0 5px;
+}
 
 .listUnit {
 
@@ -212,6 +226,16 @@ body {
 #authorize-button.active,
 #signout-button.active {
     display: inline-block;
+    margin-top: 7px;
+}
+.addEventPopup-label {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: normal;
+}
+.addEventPopup-label:first-child {
+    margin-top: 0;
 }
 
 
@@ -220,7 +244,17 @@ body {
 
 /* media query */
 @media only screen and (max-width: 700px) {
+    .header {
+        padding: 10px;
+    }
+    .header-menu {
+        left: 15px;
+    }
+    .header-right {
+        right: 10px;
+    }
     .gnb {
         width: 100%;
+        transform: translate3d(-100%, 0, 0);
     }
 }

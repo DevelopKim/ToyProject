@@ -27,13 +27,20 @@
         </nav>
 
         <header class="header">
-            <a href="#" class="header-menu">menu</a>
-            <h1 class="header-title">투두리스트</h1>
+            <a href="#" class="header-menu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
+                    <path d="M0 0v1h8v-1h-8zm0 2.97v1h8v-1h-8zm0 3v1h8v-1h-8z" transform="translate(0 1)" />
+                </svg>
+            </a>
+            <h1 class="header-title">
+                <div class="day">TODAY</div>
+                <div>2017.02.23 목</div>
+            </h1>
             <div class="header-right">
                 <button id="authorize-button" class="button">로그인</button>
                 <button id="signout-button" class="button">로그아웃</button>
-                <a href="#" class="header-search">search</a>
-                <a href="#" class="header-add">add</a>
+                <!-- <a href="#" class="header-search">search</a> -->
+                <!-- <a href="#" class="header-add">add</a> -->
             </div>
         </header>
 
@@ -41,8 +48,13 @@
 
 
         <div class="modal addEventPopup">
+            <h2 class="addEventPopup-label">제목</h2>
             <input type="datetime-title" class="addEventPopup-title inpuText block">
+
+            <h2 class="addEventPopup-label">시작일</h2>
             <input type="datetime-local" class="addEventPopup-date inpuText block">
+
+            <h2 class="addEventPopup-label">종료일</h2>
             <input type="datetime-local" class="addEventPopup-date2 inpuText block">
 
             <div class="buttonWrapper">
