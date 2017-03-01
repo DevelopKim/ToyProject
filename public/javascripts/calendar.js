@@ -1,29 +1,8 @@
-let helper = {
-    createNode: function (tag, className){
-        var newNode = document.createElement(tag);
-        if (className){
-            newNode.classList.add(className);
-        }
-        return newNode;
-    },
-
-    // 20170210 형태로 바꿔준다.
-    resetDateFormat: function (date){
-        let trimmedDate = date.match(/(\d{4})\-(\d{2})\-(\d{2})/);
-        let result = trimmedDate[0].replace(/\-/g, "");
-        return result;
-    }
-}
-
-
 let commonEl = {
     wrapperNode: document.querySelector(".contents"),
     // 일정을 날짜별로 묶어서 만들 오브젝트
     eventGroups: {}
 }
-
-
-
 
 
 // 모든 일정 화면에 뿌려준다.
@@ -57,8 +36,6 @@ function listUpcomingEvents() {
         }
     });
 }
-
-
 
 
 // 날짜별로 오브젝트 만든다.
