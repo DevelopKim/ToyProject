@@ -3,15 +3,12 @@
 
 const React = require("react");
 const ReactDom = require("react-dom");
-const LoginBtn = require("./loginBtn.js");
+const Header = require("./header");
+const App = require("./app")
 
 
 // google api 설정하고 로그인 한다. calendar api를 불러오기 위한 시작점.
 const oauth = (function() {
-
-    let status = {
-        isSignIn: false
-    }
 
     // google api console에서 발급받은 key.
     const clientKey = {
@@ -36,53 +33,12 @@ const oauth = (function() {
 
     // 로그인 하고 인증(oauth) 한다.
     function login (){
-        const authorizeButton = document.getElementById('authorize-button');
-        const signoutButton = document.getElementById('signout-button');
         const authObj = gapi.auth2.getAuthInstance();
+        let isSignedIn = authObj.isSignedIn.get();
 
-        authObj.isSignedIn.listen(updateSigninStatus);
-        updateSigninStatus(authObj.isSignedIn.get());
-
-        // authorizeButton.onclick = handleAuthClick;
-        // signoutButton.onclick = handleSignoutClick;
-
-        // 로그인 정보가 바뀌면 ui 바꿔준다. (로그인하거나 로그아웃 할때 실행)
-        function updateSigninStatus(isSignedIn) {
-            if (isSignedIn) {
-                // authorizeButton.classList.remove("active");
-                // signoutButton.classList.add("active");
-                // listUpcomingEvents();
-                // console.log(gapi.client.calendar);
-
-                // 반환해줄 오브젝트 수정해준다.
-                status.isSignIn = true;
-            } else {
-                // authorizeButton.classList.add("active");
-                // signoutButton.classList.remove("active");
-            }
-
-            // console.log(authObj)
-
-
-
-            // 로그인 버튼 컴포넌트
-            // ReactDom.render(<LoginBtn googleApi = {authObj} isSignIn = {isSignedIn.toString()} />, document.querySelector(".header-right"));
-
-        }
-
-        // 로그인 실행
-        function handleAuthClick(event) {
-            authObj.signIn();
-        }
-
-        // 로그아웃 실행
-        function handleSignoutClick(event) {
-            authObj.signOut();
-        }
-
+        // 로그인 버튼 컴포넌트
+        ReactDom.render(<App googleApi = {authObj} isSignIn = {isSignedIn} />, document.querySelector(".contents"));
+        todoMenu();
     }
-
-    // 로그인 관련된 status 반환해준다.
-    return status;
 
 })();

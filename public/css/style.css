@@ -55,7 +55,7 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
     font-size: 12px;
 }
-.contents {
+.mainContents {
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
@@ -221,7 +221,7 @@ body {
 /* style */
 #authorize-button,
 #signout-button {
-    display: none;
+    /*display: none;*/
 }
 #authorize-button.active,
 #signout-button.active {
