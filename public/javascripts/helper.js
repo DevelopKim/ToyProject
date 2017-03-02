@@ -12,5 +12,9 @@ let helper = {
         let trimmedDate = date.match(/(\d{4})\-(\d{2})\-(\d{2})/);
         let result = trimmedDate[0].replace(/\-/g, "");
         return result;
+    },
+
+    setGoogleCallback: {
+        loginFunc: login    
     }
 }

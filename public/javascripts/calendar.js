@@ -1,9 +1,12 @@
-let commonEl = {
+const React = require("react");
+const ReactDom = require("react-dom");
+const calendarList = require("./today.js");
+
+const commonEl = {
     wrapperNode: document.querySelector(".contents"),
     // 일정을 날짜별로 묶어서 만들 오브젝트
     eventGroups: {}
 }
-
 
 // 모든 일정 화면에 뿌려준다.
 function listUpcomingEvents() {
@@ -34,6 +37,8 @@ function listUpcomingEvents() {
                 commonEl.eventGroups[trimedDate].appendLi(events[i]);
             }
         }
+
+        ReactDom.render(<calendarList google = {gapi.client.calendar}  />, document.querySelector(".header-title"));
     });
 }
 

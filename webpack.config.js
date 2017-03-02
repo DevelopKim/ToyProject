@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = {
 
-    entry: path.resolve(__dirname, 'public') + '/javascripts/index.js',
+    entry: path.resolve(__dirname, 'public') + '/javascripts/oauth.js',
     output: {
         path: path.resolve(__dirname, 'public') + '/dist',
         filename: 'bundle.js',
@@ -13,15 +13,11 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                include: path.resolve(__dirname, 'public'),
+                include: path.resolve(__dirname, 'public/javascripts'),
                 loader: 'babel-loader',
                 query: {
                     presets: ['react', 'es2015']
                 }
-            },
-            {
-                test: /\.css$/,
-                loader: 'style-loader!css-loader'
             }
         ]
     }
