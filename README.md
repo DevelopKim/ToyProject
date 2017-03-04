@@ -27,7 +27,7 @@
 
 
 
-### backlog
+## backlog
 https://docs.google.com/spreadsheets/d/1oRVIbWLK-MwApX_wtYIJQj8PHpeQkYhtRmuSprEt5fE/edit#gid=0
 
-### 개발일지는 wiki에 작성
+## 개발일지는 wiki에 작성
