@@ -15,9 +15,9 @@
 - 파이어베이스로 로그인, 알림기능 추가하기   
 
 ## 파일 구조 
-public : 정적파일들 (css, image, js). 
-views : html, 템플릿 파일들. 
-routes : 라우팅 설정 js 파일들.
+- public : 정적파일들 (css, image, js). 
+- views : html, 템플릿 파일들. 
+- routes : 라우팅 설정 js 파일들.
 
 
 ## branch 구조
