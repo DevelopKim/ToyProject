@@ -1,5 +1,6 @@
 const React = require("react");
 const Header = require("./header");
+const CalendarList = require("./calendar");
 
 class App extends React.Component {
     constructor (props){
@@ -19,7 +20,9 @@ class App extends React.Component {
         return (
             <div>
                 <Header googleApi = {this.props.googleApi} isSignIn = {this.props.isSignIn} changeState = {this.changeState.bind(this)} />
-                <div className="mainContents"></div>
+                <div className="mainContents">
+                    <CalendarList />
+                </div>
             </div>
         )
     }

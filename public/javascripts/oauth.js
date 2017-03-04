@@ -3,7 +3,6 @@
 
 const React = require("react");
 const ReactDom = require("react-dom");
-const Header = require("./header");
 const App = require("./app")
 
 
