@@ -1,12 +1,4 @@
 const helper = {
-    createNode: function (tag, className){
-        var newNode = document.createElement(tag);
-        if (className){
-            newNode.classList.add(className);
-        }
-        return newNode;
-    },
-
     // 20170210 형태로 바꿔준다.
     resetDateFormat: function (date){
         let trimmedDate = date.match(/(\d{4})\-(\d{2})\-(\d{2})/);
@@ -15,8 +7,48 @@ const helper = {
     },
 
     // 2017. 01. 01 형태로 바꿔준다.
-    getKoreanDate (date){
+    getKoreanDate: function (date){
         let result = new Intl.DateTimeFormat('ko-KR').format(date);
         return result;
+    },
+
+    // schedule에 필요한 필요한 날짜 오브젝트
+    makeDateObj: function (orgDate){
+        const dayList = ["월", "화", "수", "목", "금", "토", "일"];
+        let dateObj = new Date(orgDate);
+        let day = dateObj.getDay();
+
+        let date = {
+            orgDate: orgDate,
+            day: dayList[day - 1],
+            trimmedDate: this.resetDateFormat(orgDate),
+            koreanDate: this.getKoreanDate(new Date(orgDate))
+        }
+        return date;
+    },
+
+    // schedule 오브젝트 생성
+    makeNewScheduleObj: function (dateObj){
+        const newCalendar = {
+            orgDate: dateObj.orgDate,
+            day: dateObj.day,
+            trimmedDate: dateObj.trimmedDate,
+            koreanDate: dateObj.koreanDate,
+            eventList: [],
+            eventLength: 0
+        };
+
+        return newCalendar;
+    },
+
+    appendSchedulObj: function (theEvent, dateObj, state){
+        let newCalendar = this.makeNewScheduleObj(dateObj);
+        this.appendEventToSchedule(theEvent, newCalendar);
+        state.calendar.push(newCalendar);
+        state.calendarIndex.push(dateObj.trimmedDate);
+    },
+
+    appendEventToSchedule: function (theEvent, targetSchedule){
+        targetSchedule.eventList.push(theEvent);
     }
 }
