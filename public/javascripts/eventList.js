@@ -1,18 +1,14 @@
 const React = require("react");
 
 class EventList extends React.Component {
-    constructor (props){
-        super(props);
-
-    }
-
     deleteItem (index, proxy, event){
         event.preventDefault();
-        this.props.deleteEvent(this.props.scheduleIndex, index);
+        this.props.deleteEvent(this.props.scheduleIndex, index, this);
     }
 
     render (){
         let eventList = this.props.eventList;
+
         let listItem = eventList.map(function (event, index){
             return (
                 <li key={event.id}>

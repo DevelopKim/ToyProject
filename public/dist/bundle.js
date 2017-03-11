@@ -9530,18 +9530,26 @@ var App = function (_React$Component) {
         }
     }, {
         key: "deleteEvent",
-        value: function deleteEvent(scheduleIndex, eventIndex) {
-            if (this.state.calendar[scheduleIndex].eventList.length === 1) {
-                this.state.calendarIndex.splice(scheduleIndex, 1);
-                this.state.calendar.splice(scheduleIndex, 1);
-            } else {
-                this.state.calendar[scheduleIndex].eventList.splice(eventIndex, 1);
-            }
+        value: function deleteEvent(scheduleIndex, eventIndex, eventComponent) {
 
-            this.setState({
-                calendarIndex: this.state.calendarIndex,
-                calendar: this.state.calendar
+            // google api call
+            var request = gapi.client.calendar.events.delete({
+                'calendarId': 'primary',
+                'eventId': this.state.calendar[scheduleIndex].eventList[eventIndex].id
             });
+            request.execute(function (event) {
+                if (this.state.calendar[scheduleIndex].eventList.length === 1) {
+                    this.state.calendarIndex.splice(scheduleIndex, 1);
+                    this.state.calendar.splice(scheduleIndex, 1);
+                } else {
+                    this.state.calendar[scheduleIndex].eventList.splice(eventIndex, 1);
+                }
+
+                this.setState({
+                    calendarIndex: this.state.calendarIndex,
+                    calendar: this.state.calendar
+                });
+            }.bind(this));
         }
     }, {
         key: "changeLoginState",
@@ -9741,19 +9749,31 @@ var EventList = function (_React$Component) {
     function EventList(props) {
         _classCallCheck(this, EventList);
 
-        return _possibleConstructorReturn(this, (EventList.__proto__ || Object.getPrototypeOf(EventList)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (EventList.__proto__ || Object.getPrototypeOf(EventList)).call(this, props));
+
+        _this.state = {
+            loading: false
+        };
+        return _this;
     }
 
     _createClass(EventList, [{
         key: "deleteItem",
         value: function deleteItem(index, proxy, event) {
             event.preventDefault();
-            this.props.deleteEvent(this.props.scheduleIndex, index);
+            this.props.deleteEvent(this.props.scheduleIndex, index, this);
+            console.dir(event.target);
         }
     }, {
         key: "render",
         value: function render() {
             var eventList = this.props.eventList;
+            var loadingMessage = this.state.loading ? React.createElement(
+                "span",
+                null,
+                "\uB85C\uB529\uC911"
+            ) : "";
+
             var listItem = eventList.map(function (event, index) {
                 return React.createElement(
                     "li",

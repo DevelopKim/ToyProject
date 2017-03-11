@@ -66,18 +66,26 @@ class App extends React.Component {
         });
     }
 
-    deleteEvent (scheduleIndex, eventIndex){
-        if (this.state.calendar[scheduleIndex].eventList.length === 1){
-            this.state.calendarIndex.splice(scheduleIndex, 1);
-            this.state.calendar.splice(scheduleIndex, 1);
-        } else {
-            this.state.calendar[scheduleIndex].eventList.splice(eventIndex, 1);
-        }
+    deleteEvent (scheduleIndex, eventIndex, eventComponent){
 
-        this.setState({
-            calendarIndex: this.state.calendarIndex,
-            calendar: this.state.calendar
+        // google api call
+        var request = gapi.client.calendar.events.delete({
+            'calendarId': 'primary',
+            'eventId': this.state.calendar[scheduleIndex].eventList[eventIndex].id
         });
+        request.execute(function(event) {
+            if (this.state.calendar[scheduleIndex].eventList.length === 1){
+                this.state.calendarIndex.splice(scheduleIndex, 1);
+                this.state.calendar.splice(scheduleIndex, 1);
+            } else {
+                this.state.calendar[scheduleIndex].eventList.splice(eventIndex, 1);
+            }
+
+            this.setState({
+                calendarIndex: this.state.calendarIndex,
+                calendar: this.state.calendar
+            });
+        }.bind(this));
     }
 
     changeLoginState (value){
