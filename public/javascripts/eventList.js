@@ -1,8 +1,14 @@
 const React = require("react");
 
 class EventList extends React.Component {
+    constructor (props){
+        super(props);
+        this.button = [];
+    }
+
     deleteItem (index, proxy, event){
         event.preventDefault();
+        this.button[index].innerHTML = "로딩중";
         this.props.deleteEvent(this.props.scheduleIndex, index, this);
     }
 
@@ -13,7 +19,9 @@ class EventList extends React.Component {
             return (
                 <li key={event.id}>
                     {event.summary}
-                    <a href="#" className="listUnit-delete" data-index={index} onClick={this.deleteItem.bind(this, index)}>삭제</a>
+                    <a href="#" className="listUnit-delete" data-index={index} onClick={this.deleteItem.bind(this, index)} ref={(button) => {this.button.push(button)}}>
+                        삭제
+                    </a>
                 </li>
             )
         }.bind(this));
@@ -27,7 +35,5 @@ class EventList extends React.Component {
         )
     }
 };
-
-
 
 module.exports = EventList;

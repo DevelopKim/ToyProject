@@ -9751,9 +9751,7 @@ var EventList = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (EventList.__proto__ || Object.getPrototypeOf(EventList)).call(this, props));
 
-        _this.state = {
-            loading: false
-        };
+        _this.button = [];
         return _this;
     }
 
@@ -9761,27 +9759,26 @@ var EventList = function (_React$Component) {
         key: "deleteItem",
         value: function deleteItem(index, proxy, event) {
             event.preventDefault();
+            this.button[index].innerHTML = "로딩중";
             this.props.deleteEvent(this.props.scheduleIndex, index, this);
-            console.dir(event.target);
         }
     }, {
         key: "render",
         value: function render() {
             var eventList = this.props.eventList;
-            var loadingMessage = this.state.loading ? React.createElement(
-                "span",
-                null,
-                "\uB85C\uB529\uC911"
-            ) : "";
 
             var listItem = eventList.map(function (event, index) {
+                var _this2 = this;
+
                 return React.createElement(
                     "li",
                     { key: event.id },
                     event.summary,
                     React.createElement(
                         "a",
-                        { href: "#", className: "listUnit-delete", "data-index": index, onClick: this.deleteItem.bind(this, index) },
+                        { href: "#", className: "listUnit-delete", "data-index": index, onClick: this.deleteItem.bind(this, index), ref: function ref(button) {
+                                _this2.button.push(button);
+                            } },
                         "\uC0AD\uC81C"
                     )
                 );
