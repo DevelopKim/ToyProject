@@ -9476,7 +9476,6 @@ var App = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
         _this.state = {
-            login: 0,
             calendarIndex: [],
             calendar: []
         };
@@ -9493,7 +9492,9 @@ var App = function (_React$Component) {
     _createClass(App, [{
         key: "componentDidMount",
         value: function componentDidMount() {
-            this.getCalendarFromServer();
+            if (this.props.isSignIn) {
+                this.getCalendarFromServer();
+            }
         }
     }, {
         key: "getCalendarFromServer",
@@ -9555,7 +9556,7 @@ var App = function (_React$Component) {
         key: "changeLoginState",
         value: function changeLoginState(value) {
             this.setState({
-                login: value
+                // login: value
             });
         }
     }, {
@@ -9564,7 +9565,7 @@ var App = function (_React$Component) {
             return React.createElement(
                 "div",
                 null,
-                React.createElement(Header, { googleApi: this.props.googleApi, isSignIn: this.props.isSignIn, changeState: this.changeLoginState.bind(this) }),
+                React.createElement(Header, { googleApi: this.props.googleApi, isSignIn: this.props.isSignIn, getCalendarFunc: this.getCalendarFromServer.bind(this) }),
                 React.createElement(
                     "div",
                     { className: "mainContents" },
@@ -9615,7 +9616,7 @@ var LoginBtn = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (LoginBtn.__proto__ || Object.getPrototypeOf(LoginBtn)).call(this, props));
 
         _this.state = {
-            signed: _this.props.isSignIn ? 1 : 0,
+            index: _this.props.isSignIn ? 1 : 0,
             text: ["로그인", "로그아웃"],
             eventHandler: [_this.signIn, _this.signOut]
         };
@@ -9625,29 +9626,30 @@ var LoginBtn = function (_React$Component) {
     _createClass(LoginBtn, [{
         key: "signIn",
         value: function signIn() {
-            this.props.googleApi.signIn();
-            this.props.changeState(1);
+            console.log(this.props);
+            this.props.googleApi.signIn().then(function () {
+                this.props.getCalendarFunc();
+            }.bind(this));
 
             // 로그인 state를 바꿔준다.
             this.setState({
-                signed: 1
+                index: 1
             });
         }
     }, {
         key: "signOut",
         value: function signOut() {
             this.props.googleApi.signOut();
-            this.props.changeState(0);
 
             // 로그인 state를 바꿔준다.
             this.setState({
-                signed: 0
+                index: 0
             });
         }
     }, {
         key: "render",
         value: function render() {
-            var index = this.state.signed;
+            var index = this.state.index;
 
             return React.createElement(
                 "button",
@@ -9841,7 +9843,7 @@ var Header = function (_React$Component) {
                 React.createElement(
                     "div",
                     { className: "header-right" },
-                    React.createElement(LoginBtn, { googleApi: this.props.googleApi, isSignIn: this.props.isSignIn, changeState: this.props.changeState })
+                    React.createElement(LoginBtn, { googleApi: this.props.googleApi, isSignIn: this.props.isSignIn, getCalendarFunc: this.props.getCalendarFunc })
                 )
             );
         }

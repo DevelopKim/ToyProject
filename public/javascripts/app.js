@@ -18,7 +18,6 @@ class App extends React.Component {
     constructor (props){
         super(props);
         this.state = {
-            login: 0,
             calendarIndex: [],
             calendar: []
         }
@@ -32,7 +31,9 @@ class App extends React.Component {
     }
 
     componentDidMount (){
-        this.getCalendarFromServer();
+        if (this.props.isSignIn){
+            this.getCalendarFromServer();
+        }
     }
 
     getCalendarFromServer (){
@@ -67,7 +68,6 @@ class App extends React.Component {
     }
 
     deleteEvent (scheduleIndex, eventIndex, eventComponent){
-
         // google api call
         var request = gapi.client.calendar.events.delete({
             'calendarId': 'primary',
@@ -88,16 +88,10 @@ class App extends React.Component {
         }.bind(this));
     }
 
-    changeLoginState (value){
-        this.setState({
-            login: value
-        });
-    }
-
     render (){
         return (
             <div>
-                <Header googleApi = {this.props.googleApi} isSignIn = {this.props.isSignIn} changeState = {this.changeLoginState.bind(this)} />
+                <Header googleApi={this.props.googleApi} isSignIn={this.props.isSignIn} getCalendarFunc={this.getCalendarFromServer.bind(this)}/>
                 <div className="mainContents">
                     <CalendarList scheduleList = {this.state.calendar} deleteEvent={this.deleteEvent.bind(this)} />
                 </div>

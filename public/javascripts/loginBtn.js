@@ -4,34 +4,36 @@ class LoginBtn extends React.Component {
     constructor (props){
         super(props);
         this.state = {
-            signed: this.props.isSignIn ? 1 : 0,
+            index: this.props.isSignIn ? 1 : 0,
             text: ["로그인", "로그아웃"],
             eventHandler: [this.signIn, this.signOut]
         };
     }
 
     signIn (){
-        this.props.googleApi.signIn();
-        this.props.changeState(1);
+        this.props.googleApi.signIn()
+        .then(function (){
+            this.props.getCalendarFunc();
+        }.bind(this));
+
 
         // 로그인 state를 바꿔준다.
         this.setState({
-            signed: 1
+            index: 1
         });
     }
 
     signOut (){
         this.props.googleApi.signOut();
-        this.props.changeState(0);
 
         // 로그인 state를 바꿔준다.
         this.setState({
-            signed: 0
+            index: 0
         });
     }
 
     render (){
-        let index = this.state.signed;
+        let index = this.state.index;
 
         return (
             <button id="authorize-button" className="button" onClick={this.state.eventHandler[index].bind(this)}>

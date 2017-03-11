@@ -12,7 +12,7 @@ class Header extends React.Component {
                 <MenuIcon />
                 <h1 className="header-title"></h1>
                 <div className="header-right">
-                    <LoginBtn googleApi = {this.props.googleApi} isSignIn = {this.props.isSignIn} changeState = {this.props.changeState} />
+                    <LoginBtn googleApi={this.props.googleApi} isSignIn={this.props.isSignIn} getCalendarFunc={this.props.getCalendarFunc} />
                 </div>
             </header>
         )
