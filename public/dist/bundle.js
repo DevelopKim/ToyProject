@@ -9518,9 +9518,9 @@ var App = function (_React$Component) {
 
                 // 해당 날짜의 오브젝트 없으면 오브젝트 만든다.
                 if (index === 0 || calendarIndex[calendarIndex.length - 1] !== dateObj.trimmedDate) {
-                    helper.appendSchedulObj(ele, dateObj, this.state);
+                    rebuildEvents.appendSchedulObj(ele, dateObj, this.state);
                 } else {
-                    helper.appendEventToSchedule(ele, this.state.calendar[calendarIndex.length - 1]);
+                    rebuildEvents.appendEventToSchedule(ele, this.state.calendar[calendarIndex.length - 1]);
                 }
             }.bind(this));
 
@@ -9532,7 +9532,6 @@ var App = function (_React$Component) {
     }, {
         key: "deleteEvent",
         value: function deleteEvent(scheduleIndex, eventIndex, eventComponent) {
-
             // google api call
             var request = gapi.client.calendar.events.delete({
                 'calendarId': 'primary',
@@ -9551,13 +9550,6 @@ var App = function (_React$Component) {
                     calendar: this.state.calendar
                 });
             }.bind(this));
-        }
-    }, {
-        key: "changeLoginState",
-        value: function changeLoginState(value) {
-            this.setState({
-                // login: value
-            });
         }
     }, {
         key: "render",
@@ -9626,7 +9618,6 @@ var LoginBtn = function (_React$Component) {
     _createClass(LoginBtn, [{
         key: "signIn",
         value: function signIn() {
-            console.log(this.props);
             this.props.googleApi.signIn().then(function () {
                 this.props.getCalendarFunc();
             }.bind(this));

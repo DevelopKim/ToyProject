@@ -55,9 +55,9 @@ class App extends React.Component {
 
             // 해당 날짜의 오브젝트 없으면 오브젝트 만든다.
             if (index === 0 || calendarIndex[calendarIndex.length - 1] !== dateObj.trimmedDate){
-                helper.appendSchedulObj(ele, dateObj, this.state);
+                rebuildEvents.appendSchedulObj(ele, dateObj, this.state);
             } else {
-                helper.appendEventToSchedule(ele, this.state.calendar[calendarIndex.length - 1]);
+                rebuildEvents.appendEventToSchedule(ele, this.state.calendar[calendarIndex.length - 1]);
             }
         }.bind(this));
 
