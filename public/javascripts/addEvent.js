@@ -14,15 +14,13 @@ class AddEvent extends React.Component {
     }
 
     componentDidMount (){
-         this.formEle.addEventListener("submit", this.addEvent.bind(this));
+         this.formEle.addEventListener("submit", this.addNewEvent.bind(this));
     }
 
-
-    addEvent (event){
+    addNewEvent (event){
         event.preventDefault();
 
         const title = this.titleEle.value;
-        const date = this.state.dateVal;
         const dateTime = new Date(this.dateEle.value);
 
         this.props.addEventFunc(title, dateTime, dateTime);
@@ -32,7 +30,6 @@ class AddEvent extends React.Component {
         this.setState({
             dateVal: this.dateEle.value
         });
-
     }
 
     render (){

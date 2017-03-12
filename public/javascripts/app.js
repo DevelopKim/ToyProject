@@ -3,18 +3,6 @@ const Header = require("./header");
 const CalendarList = require("./calendar");
 const AddEvent = require("./addEvent");
 
-/*
-스캐줄 오브젝트
-{
-    orgDate: dateObj.orgDate,
-    day: dateObj.day,
-    trimmedDate: dateObj.trimmedDate,
-    koreanDate: dateObj.koreanDate,
-    eventList: [],
-    eventLength: 0
-};
-*/
-
 class App extends React.Component {
     constructor (props){
         super(props);
