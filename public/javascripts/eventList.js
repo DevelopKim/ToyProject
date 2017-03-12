@@ -3,11 +3,13 @@ const React = require("react");
 class EventList extends React.Component {
     constructor (props){
         super(props);
+
+        // 리스트가 여러개 있으니, 버튼도 여러개 있을 수 있다.
+        // click 이벤트 핸들러에서 index를 받아와서 해당 리스트의 버튼을 가져온다.
         this.button = [];
     }
 
     deleteItem (index, proxy, event){
-        event.preventDefault();
         this.button[index].innerHTML = "로딩중";
         this.props.deleteEvent(this.props.scheduleIndex, index, this);
     }
@@ -19,9 +21,9 @@ class EventList extends React.Component {
             return (
                 <li key={event.id}>
                     {event.summary}
-                    <a href="#" className="listUnit-delete" data-index={index} onClick={this.deleteItem.bind(this, index)} ref={(button) => {this.button.push(button)}}>
+                    <span className="listUnit-delete" data-index={index} onClick={this.deleteItem.bind(this, index)} ref={(button) => {this.button.push(button)}}>
                         삭제
-                    </a>
+                    </span>
                 </li>
             )
         }.bind(this));

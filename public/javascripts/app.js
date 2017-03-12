@@ -1,6 +1,7 @@
 const React = require("react");
 const Header = require("./header");
 const CalendarList = require("./calendar");
+const AddEvent = require("./addEvent");
 
 /*
 스캐줄 오브젝트
@@ -65,6 +66,8 @@ class App extends React.Component {
             calendarIndex: calendarIndex,
             calendar: this.state.calendar
         });
+
+        console.log(this.state)
     }
 
     deleteEvent (scheduleIndex, eventIndex, eventComponent){
@@ -88,6 +91,49 @@ class App extends React.Component {
         }.bind(this));
     }
 
+    addEvent (title, startDate, endDate){
+        console.log(startDate)
+        const event = {
+            summary: title,
+            start: {
+                dateTime: startDate,
+                timeZone: "Asia/Seoul"
+            },
+            end: {
+                dateTime: endDate,
+                timeZone: "Asia/Seoul"
+            }
+        };
+
+        var request = gapi.client.calendar.events.insert({
+          'calendarId': 'primary',
+          'resource': event
+        });
+
+        request.execute(function(event) {
+            if (event.error){
+                console.log(event.error);
+
+                return false;
+            }
+
+            const orgDate = event.start.dateTime ? event.start.dateTime : event.start.date;
+            const dateObj = helper.makeDateObj(orgDate);
+            const index = this.state.calendarIndex.indexOf(dateObj.trimmedDate);
+
+            if (index < 0){
+                rebuildEvents.appendSchedulObj(event, dateObj, this.state);
+            } else {
+                rebuildEvents.appendEventToSchedule(event, this.state.calendar[index]);
+            }
+
+            this.setState({
+                calendarIndex: this.state.calendarIndex,
+                calendar: this.state.calendar
+            });
+        }.bind(this));
+    }
+
     render (){
         return (
             <div>
@@ -95,6 +141,7 @@ class App extends React.Component {
                 <div className="mainContents">
                     <CalendarList scheduleList = {this.state.calendar} deleteEvent={this.deleteEvent.bind(this)} />
                 </div>
+                <AddEvent addEventFunc={this.addEvent.bind(this)} />
             </div>
         )
     }
