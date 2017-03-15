@@ -9927,14 +9927,30 @@ var Header = function (_React$Component) {
     function Header(props) {
         _classCallCheck(this, Header);
 
-        return _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
+        var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
+
+        _this.state = {
+            date: helper.getKoreanDate(new Date())
+        };
+        return _this;
     }
 
     _createClass(Header, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            var timer = setInterval(this.changeDate, 60000);
+        }
+    }, {
+        key: "changeDate",
+        value: function changeDate(past) {
+            var now = helper.getKoreanDate(new Date());
+            this.setState({
+                date: now
+            });
+        }
+    }, {
         key: "render",
         value: function render() {
-            var date = helper.getKoreanDate(new Date());
-
             return React.createElement(
                 "header",
                 { className: "header" },
@@ -9950,7 +9966,7 @@ var Header = function (_React$Component) {
                     React.createElement(
                         "div",
                         null,
-                        date
+                        this.state.date
                     )
                 ),
                 React.createElement(
