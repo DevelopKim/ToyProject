@@ -1,5 +1,6 @@
 const React = require("react");
 const LoginBtn = require("./LoginBtn");
+const helper = require("./helper");
 
 class Header extends React.Component {
     constructor (props){

@@ -27,3 +27,5 @@ const helper = {
         return date;
     }
 }
+
+module.exports = helper;

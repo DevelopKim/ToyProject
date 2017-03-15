@@ -1,3 +1,4 @@
+const helper = require("./helper");
 
 const calendarIndex = [];
 const calendar = [];
@@ -40,16 +41,26 @@ function appendSchedulObj (theEvent, dateObj){
 
     // 리스트 마지막에 추가한다.
     appendEventToSchedule(theEvent, calendarIndex.length - 1);
+
+    return {
+        calendarIndex: calendarIndex,
+        calendar: calendar
+    };
 }
 
 function appendEventToSchedule (theEvent, index){
     calendar[index].eventList.push(theEvent);
+
+    return {
+        calendar: calendar
+    };
 }
 
 function addTheEvent (event){
     const orgDate = event.start.dateTime ? event.start.dateTime : event.start.date;
     const dateObj = helper.makeDateObj(orgDate);
     const index = calendarIndex.indexOf(dateObj.trimmedDate);
+    let newState = null;
 
     if (index < 0){
         newState = appendSchedulObj(event, dateObj);
@@ -57,10 +68,7 @@ function addTheEvent (event){
         newState = appendEventToSchedule(event, index);
     }
 
-    return {
-        calendarIndex: calendarIndex,
-        calendar: calendar
-    };
+    return newState;
 }
 
 function deleteTheEvent (scheduleIndex, eventIndex){

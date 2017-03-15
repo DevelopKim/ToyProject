@@ -3,7 +3,8 @@
 
 const React = require("react");
 const ReactDom = require("react-dom");
-const App = require("./app")
+const App = require("./app");
+const todoMenu = require("./menu");
 
 
 // google api 설정하고 로그인 한다. calendar api를 불러오기 위한 시작점.
