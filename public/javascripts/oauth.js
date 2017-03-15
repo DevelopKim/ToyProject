@@ -35,7 +35,7 @@ const oauth = (function() {
         const authObj = gapi.auth2.getAuthInstance();
         let isSignedIn = authObj.isSignedIn.get();
 
-        // 로그인 버튼 컴포넌트
+        // 본문 컴포넌트
         ReactDom.render(<App googleApi = {authObj} isSignIn = {isSignedIn} />, document.querySelector(".contents"));
         todoMenu();
     }

@@ -7,10 +7,15 @@ class Header extends React.Component {
     }
 
     render (){
+        let date = helper.getKoreanDate(new Date());
+
         return (
             <header className="header">
                 <MenuIcon />
-                <h1 className="header-title"></h1>
+                <h1 className="header-title">
+                    <div className="day">TODAY</div>
+                    <div>{date}</div>
+                </h1>
                 <div className="header-right">
                     <LoginBtn googleApi={this.props.googleApi} isSignIn={this.props.isSignIn} getCalendarFunc={this.props.getCalendarFunc} />
                 </div>

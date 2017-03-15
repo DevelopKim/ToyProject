@@ -9489,64 +9489,26 @@ var App = function (_React$Component) {
         key: "getCalendarFromServer",
         value: function getCalendarFromServer() {
             gapi.client.calendar.events.list(this.calendarSetting).then(function (response) {
-                this.makeScheduleObj(response);
+                this.init(response);
             }, null, this);
         }
 
         // 각각의 일정별로 들어오는 데이터를 날짜별로 재가공 한다.
 
     }, {
-        key: "makeScheduleObj",
-        value: function makeScheduleObj(response) {
-            var events = response.result.items;
-            var calendarIndex = this.state.calendarIndex;
+        key: "init",
+        value: function init(response) {
+            var eventInit = rebuildEvents(); // 데이터를 다루는 함수는 따로 분리함. constructor.prototype으로 프로토타입에 추가시켜줬음.
+            var newState = eventInit.init(response); // 재가공된 데이터를 반환한다. 여기서 데이터는 곧 state임.
 
-            events.forEach(function (ele, index, arr) {
-                var orgDate = ele.start.dateTime ? ele.start.dateTime : ele.start.date;
-                var dateObj = helper.makeDateObj(orgDate);
-
-                // 해당 날짜의 오브젝트 없으면 오브젝트 만든다.
-                if (index === 0 || calendarIndex[calendarIndex.length - 1] !== dateObj.trimmedDate) {
-                    rebuildEvents.appendSchedulObj(ele, dateObj, this.state);
-                } else {
-                    rebuildEvents.appendEventToSchedule(ele, this.state.calendar[calendarIndex.length - 1]);
-                }
-            }.bind(this));
-
-            this.setState({
-                calendarIndex: calendarIndex,
-                calendar: this.state.calendar
-            });
-
-            console.log(this.state);
-        }
-    }, {
-        key: "deleteEvent",
-        value: function deleteEvent(scheduleIndex, eventIndex, eventComponent) {
-            // google api call
-            var request = gapi.client.calendar.events.delete({
-                'calendarId': 'primary',
-                'eventId': this.state.calendar[scheduleIndex].eventList[eventIndex].id
-            });
-            request.execute(function (event) {
-                if (this.state.calendar[scheduleIndex].eventList.length === 1) {
-                    this.state.calendarIndex.splice(scheduleIndex, 1);
-                    this.state.calendar.splice(scheduleIndex, 1);
-                } else {
-                    this.state.calendar[scheduleIndex].eventList.splice(eventIndex, 1);
-                }
-
-                this.setState({
-                    calendarIndex: this.state.calendarIndex,
-                    calendar: this.state.calendar
-                });
-            }.bind(this));
+            this.constructor.prototype.addTheEvent = eventInit.func.addTheEvent;
+            this.constructor.prototype.deleteTheEvent = eventInit.func.deleteTheEvent;
+            this.setState(newState);
         }
     }, {
         key: "addEvent",
         value: function addEvent(title, startDate, endDate) {
-            console.log(startDate);
-            var event = {
+            var newEvent = {
                 summary: title,
                 start: {
                     dateTime: startDate,
@@ -9557,33 +9519,38 @@ var App = function (_React$Component) {
                     timeZone: "Asia/Seoul"
                 }
             };
-
             var request = gapi.client.calendar.events.insert({
                 'calendarId': 'primary',
-                'resource': event
+                'resource': newEvent
             });
 
             request.execute(function (event) {
                 if (event.error) {
                     console.log(event.error);
-
                     return false;
                 }
 
-                var orgDate = event.start.dateTime ? event.start.dateTime : event.start.date;
-                var dateObj = helper.makeDateObj(orgDate);
-                var index = this.state.calendarIndex.indexOf(dateObj.trimmedDate);
+                var newState = this.addTheEvent(event);
+                this.setState(newState);
+            }.bind(this));
+        }
+    }, {
+        key: "deleteEvent",
+        value: function deleteEvent(scheduleIndex, eventIndex) {
+            var eventId = this.state.calendar[scheduleIndex].eventList[eventIndex].id;
+            var request = gapi.client.calendar.events.delete({
+                'calendarId': 'primary',
+                'eventId': eventId
+            });
 
-                if (index < 0) {
-                    rebuildEvents.appendSchedulObj(event, dateObj, this.state);
-                } else {
-                    rebuildEvents.appendEventToSchedule(event, this.state.calendar[index]);
+            request.execute(function (event) {
+                if (event.error) {
+                    console.log(event.error);
+                    return false;
                 }
 
-                this.setState({
-                    calendarIndex: this.state.calendarIndex,
-                    calendar: this.state.calendar
-                });
+                var newState = this.deleteTheEvent(scheduleIndex, eventIndex);
+                this.setState(newState);
             }.bind(this));
         }
     }, {
@@ -9893,7 +9860,7 @@ var EventList = function (_React$Component) {
         key: "deleteItem",
         value: function deleteItem(index, proxy, event) {
             this.button[index].innerHTML = "로딩중";
-            this.props.deleteEvent(this.props.scheduleIndex, index, this);
+            this.props.deleteEvent(this.props.scheduleIndex, index);
         }
     }, {
         key: "render",
@@ -9966,11 +9933,26 @@ var Header = function (_React$Component) {
     _createClass(Header, [{
         key: "render",
         value: function render() {
+            var date = helper.getKoreanDate(new Date());
+
             return React.createElement(
                 "header",
                 { className: "header" },
                 React.createElement(MenuIcon, null),
-                React.createElement("h1", { className: "header-title" }),
+                React.createElement(
+                    "h1",
+                    { className: "header-title" },
+                    React.createElement(
+                        "div",
+                        { className: "day" },
+                        "TODAY"
+                    ),
+                    React.createElement(
+                        "div",
+                        null,
+                        date
+                    )
+                ),
                 React.createElement(
                     "div",
                     { className: "header-right" },
@@ -22270,7 +22252,7 @@ var oauth = function () {
         var authObj = gapi.auth2.getAuthInstance();
         var isSignedIn = authObj.isSignedIn.get();
 
-        // 로그인 버튼 컴포넌트
+        // 본문 컴포넌트
         ReactDom.render(React.createElement(App, { googleApi: authObj, isSignIn: isSignedIn }), document.querySelector(".contents"));
         todoMenu();
     }
