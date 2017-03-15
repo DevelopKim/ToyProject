@@ -9456,18 +9456,6 @@ var Header = __webpack_require__(86);
 var CalendarList = __webpack_require__(84);
 var AddEvent = __webpack_require__(83);
 
-/*
-스캐줄 오브젝트
-{
-    orgDate: dateObj.orgDate,
-    day: dateObj.day,
-    trimmedDate: dateObj.trimmedDate,
-    koreanDate: dateObj.koreanDate,
-    eventList: [],
-    eventLength: 0
-};
-*/
-
 var App = function (_React$Component) {
     _inherits(App, _React$Component);
 
@@ -9742,15 +9730,14 @@ var AddEvent = function (_React$Component) {
     _createClass(AddEvent, [{
         key: "componentDidMount",
         value: function componentDidMount() {
-            this.formEle.addEventListener("submit", this.addEvent.bind(this));
+            this.formEle.addEventListener("submit", this.addNewEvent.bind(this));
         }
     }, {
-        key: "addEvent",
-        value: function addEvent(event) {
+        key: "addNewEvent",
+        value: function addNewEvent(event) {
             event.preventDefault();
 
             var title = this.titleEle.value;
-            var date = this.state.dateVal;
             var dateTime = new Date(this.dateEle.value);
 
             this.props.addEventFunc(title, dateTime, dateTime);

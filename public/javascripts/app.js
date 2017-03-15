@@ -54,8 +54,6 @@ class App extends React.Component {
             calendarIndex: calendarIndex,
             calendar: this.state.calendar
         });
-
-        console.log(this.state)
     }
 
     deleteEvent (scheduleIndex, eventIndex, eventComponent){
