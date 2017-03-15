@@ -15,7 +15,7 @@
 
         <nav class="gnb">
             <div class="gnb-user">chocoma87</div>
-            <ul class="gnb-list list">
+            <!-- <ul class="gnb-list list">
                 <li><a href="#">전체보기</a></li>
                 <li>카테고리
                     <ul class="list gnb-categoryList">
@@ -23,51 +23,18 @@
                         <li><a href="#">이력서</a></li>
                     </ul>
                 </li>
-            </ul>
+            </ul> -->
         </nav>
-
-        <header class="header">
-            <a href="#" class="header-menu">
-                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8">
-                    <path d="M0 0v1h8v-1h-8zm0 2.97v1h8v-1h-8zm0 3v1h8v-1h-8z" transform="translate(0 1)" />
-                </svg>
-            </a>
-            <h1 class="header-title"></h1>
-            <div class="header-right">
-                <button id="authorize-button" class="button">로그인</button>
-                <button id="signout-button" class="button">로그아웃</button>
-                <!-- <a href="#" class="header-search">search</a> -->
-                <!-- <a href="#" class="header-add">add</a> -->
-            </div>
-        </header>
 
         <div class="contents"></div>
 
-
-        <div class="modal addEventPopup">
-            <h2 class="addEventPopup-label">제목</h2>
-            <input type="datetime-title" class="addEventPopup-title inpuText block">
-
-            <h2 class="addEventPopup-label">시작일</h2>
-            <input type="datetime-local" class="addEventPopup-date inpuText block">
-
-            <h2 class="addEventPopup-label">종료일</h2>
-            <input type="datetime-local" class="addEventPopup-date2 inpuText block">
-
-            <div class="buttonWrapper">
-                <a href="#" class="button" id="addEvent">추가</a>
-                <a href="#" class="button white">취소</a>
-            </div>
-        </div>
-
     </div>
 
-    <script src="/dist/bundle.js"></script>
-    <script src="/javascripts/menu.js"></script>
     <script src="https://apis.google.com/js/api.js"></script>
-    <script src="/javascripts/oauth.js"></script>
+    <script src="/javascripts/menu.js"></script>
     <script src="/javascripts/helper.js"></script>
-    <script src="/javascripts/calendar.js"></script>
+    <script src="/javascripts/rebuildEvents.js"></script>
+    <script src="/dist/bundle.js"></script>
 
 </body>
 

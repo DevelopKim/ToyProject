@@ -4,7 +4,7 @@
 // todoMenu.gnbIsOpen
 // todoMenu.menuToggle
 
-var todoMenu = (function(){
+var todoMenu = function(){
     var gnb = document.querySelector(".gnb");
     var menuBtn = document.querySelector(".header-menu");
 
@@ -24,4 +24,4 @@ var todoMenu = (function(){
     menuBtn.addEventListener("click", option.menuToggle.bind(option));
 
     // return option;
-})();
+}
