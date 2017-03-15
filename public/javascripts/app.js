@@ -2,6 +2,7 @@ const React = require("react");
 const Header = require("./header");
 const CalendarList = require("./calendar");
 const AddEvent = require("./addEvent");
+const rebuildEvents = require("./rebuildEvents");
 
 class App extends React.Component {
     constructor (props){
@@ -35,11 +36,11 @@ class App extends React.Component {
 
     // 각각의 일정별로 들어오는 데이터를 날짜별로 재가공 한다.
     init (response){
-        const eventInit = rebuildEvents(); // 데이터를 다루는 함수는 따로 분리함. constructor.prototype으로 프로토타입에 추가시켜줬음.
-        const newState = eventInit.init(response); // 재가공된 데이터를 반환한다. 여기서 데이터는 곧 state임.
+        // const eventInit = rebuildEvents(); // 데이터를 다루는 함수는 따로 분리함. constructor.prototype으로 프로토타입에 추가시켜줬음.
+        const newState = rebuildEvents.init(response); // 재가공된 데이터를 반환한다. 여기서 데이터는 곧 state임.
 
-        this.constructor.prototype.addTheEvent = eventInit.func.addTheEvent;
-        this.constructor.prototype.deleteTheEvent = eventInit.func.deleteTheEvent;
+        this.constructor.prototype.addTheEvent = rebuildEvents.func.addTheEvent;
+        this.constructor.prototype.deleteTheEvent = rebuildEvents.func.deleteTheEvent;
         this.setState(newState);
     }
 

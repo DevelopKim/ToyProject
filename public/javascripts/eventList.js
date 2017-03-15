@@ -11,6 +11,7 @@ class EventList extends React.Component {
 
     deleteItem (index, proxy, event){
         this.button[index].innerHTML = "로딩중";
+        this.button.splice();
         this.props.deleteEvent(this.props.scheduleIndex, index);
     }
 
