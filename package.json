@@ -6,6 +6,9 @@
     "start": "node ./bin/www",
     "build": "webpack --config webpack.config.js"
   },
+  "engines": {
+      "node": "6.9.2"
+  },
   "dependencies": {
     "body-parser": "~1.16.0",
     "cookie-parser": "~1.4.3",
