@@ -9938,7 +9938,7 @@ var Header = function (_React$Component) {
     _createClass(Header, [{
         key: "componentDidMount",
         value: function componentDidMount() {
-            var timer = setInterval(this.changeDate, 60000);
+            var timer = setInterval(this.changeDate.bind(this), 60000);
         }
     }, {
         key: "changeDate",

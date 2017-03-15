@@ -11,7 +11,7 @@ class Header extends React.Component {
     }
 
     componentDidMount (){
-        const timer = setInterval(this.changeDate, 60000);
+        const timer = setInterval(this.changeDate.bind(this), 60000);
     }
 
     changeDate (past){
