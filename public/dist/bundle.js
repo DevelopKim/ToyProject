@@ -9859,6 +9859,8 @@ var EventList = function (_React$Component) {
     _createClass(EventList, [{
         key: "deleteItem",
         value: function deleteItem(index, proxy, event) {
+            console.log(index);
+            console.log(this.button);
             this.button[index].innerHTML = "로딩중";
             this.props.deleteEvent(this.props.scheduleIndex, index);
         }
